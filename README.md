@@ -45,10 +45,10 @@ SuperCI
 
 
 
-###配置文件
+#####配置文件
 
 superci/conf/application.ini
-####我们看看路由配置部分
+#####我们看看路由配置部分
 
 	routes.regex.type="regex"  
 	routes.regex.match="#^/list/([^/]*)/([^/]*)#"  
@@ -75,7 +75,7 @@ http://localhost/index.php?c=test&m=manUser&name=bigbox&sex=%E7%94%B7&age=51
 	}  
 
 
-###入口
+#####入口
 
 superci/index.php
 
@@ -84,7 +84,7 @@ superci/index.php
 	$app = new Yaf_Application(APPPATH . "/conf/application.ini");  
 	$app->bootstrap()->run();  
 
-###Bootstrap启动过程
+#####Bootstrap启动过程
 
 文件位于superci/application/bootstrap.php， Yaf的初始化逻辑， 每个_init开头的函数都会被顺序执行，用户也可以在这里添加自己的初始化逻辑
 
@@ -118,7 +118,7 @@ superci/index.php
     }  
 
 
-###过滤器插件
+#####过滤器插件
 
 在bootstrap.php 中， 有注册插件 _initPlugins ，我们注册了一个过滤器FilterPlugin，插件定义了6个Hook。
 
@@ -150,7 +150,7 @@ superci/index.php
 	}  
 
 
-###控制层
+#####控制层
 
 所有控制器位于：superci/application/controllers 目录，所有控制器继承自Core_Controller方法，里面主要获取GET/POST参数，以及返回数据的处理，Core_Controller继承自 Yaf_Controller_Abstract， init方法会被自动调用，更多细节参考 Yaf 框架控制器。
 
@@ -175,20 +175,20 @@ superci/index.php
 	    }  
 	}  
 
-###模型层
+#####模型层
 所有的Model层位于 superci/application/models目录，
 
 通过 $this->example_model = Loader::model('ExampleModel'); 加载模型
 
 
 
-###VIEW层
+#####VIEW层
 
 视图层参考yaf视图渲染那部分， 我没有写案例。
 
 
 
-###APP应用配置
+#####APP应用配置
 
 所有配置位于 superci/application/config目录
 
@@ -196,7 +196,7 @@ superci/index.php
 
 
 
-###公共类加载
+#####公共类加载
 
 所有的公共类库位于superci/application/library目录，但是注意的是， 如果你的类位于library子目录下面，你的类必须用下划线"_"分隔；
 
@@ -206,7 +206,7 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 
 
 
-###公共函数
+#####公共函数
 
 所有的公共类库位于superci/application/helpers目录
 
@@ -214,7 +214,7 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 
 
 
-###数据库操作
+#####数据库操作
 
 数据库操作与CI操作一致，如下，具体细节可以参考CI框架，底层引擎采用phalcon，用户可以从下载包中获取被摘取
 
@@ -244,7 +244,7 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 
 
 
-###日志
+#####日志
 
 日志使用方法如下：
 
