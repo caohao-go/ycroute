@@ -1,11 +1,11 @@
 SuperCI
 ===
 
-####我们自己的业务之前框架是基于CI框架写的，设计接口达到500多个，如果全面改用其他框架，修改工作量将非常大，如何在不大规模修改业务代码的基础上让它性能更高成为我研究的方向！
+#### 我们自己的业务之前框架是基于CI框架写的，设计接口达到500多个，如果全面改用其他框架，修改工作量将非常大，如何在不大规模修改业务代码的基础上让它性能更高成为我研究的方向！
 
-######图文介绍：https://blog.csdn.net/caohao0591/article/details/80271974
+###### 图文介绍：https://blog.csdn.net/caohao0591/article/details/80271974
 
-####越是简单的东西越是好的，基于此最近研究了PHP的各种框架， 有yaf, phalcon, CI框架， 
+#### 越是简单的东西越是好的，基于此最近研究了PHP的各种框架， 有yaf, phalcon, CI框架， 
 
 + 其中Yaf 是PHP国内第一人写的纯C框架， 核心在于路由部分与类的加载功能， 可惜没有数据库ORM操作，极轻量级。
 
@@ -14,7 +14,7 @@ SuperCI
 + CI也是一个市场占有率非常高的框架，是纯PHP框架，适度轻量级，文档丰富，性能不及 Yaf 的 1/3。
 
 
-####依照上面的原理，我对项目进行了优化升级，在此基础上开发了一个新的轻量级组合框架，命名为 SuperCI：
+#### 依照上面的原理，我对项目进行了优化升级，在此基础上开发了一个新的轻量级组合框架，命名为 SuperCI：
 
 + 考虑之前做的项目都是CI框架，如果全部推翻，将会有超级多的东西需要修改，所以我将CI引擎替换，但是SuperCI对外提供的调用方式不变，
 
@@ -28,7 +28,7 @@ SuperCI
 
 + 替换 PHP 5 到 PHP 7 ， 开启代码缓存opcache。
 
-#####通过以上工作，CPU利用率提升10倍，内存使用大幅提升，响应时间降低到原来50%， 线上运行半年，稳定可靠，线上服务器使用减少2/3，框架极度轻量级， 越是简单的东西越是好的，不说了，上图上源码。
+##### 通过以上工作，CPU利用率提升10倍，内存使用大幅提升，响应时间降低到原来50%， 线上运行半年，稳定可靠，线上服务器使用减少2/3，框架极度轻量级， 越是简单的东西越是好的，不说了，上图上源码。
 
 
 
@@ -45,10 +45,10 @@ SuperCI
 
 
 
-#####配置文件
+##### 配置文件
 
 superci/conf/application.ini
-#####我们看看路由配置部分
+##### 我们看看路由配置部分
 
 	routes.regex.type="regex"  
 	routes.regex.match="#^/list/([^/]*)/([^/]*)#"  
@@ -61,7 +61,7 @@ superci/conf/application.ini
 	routes.simple.action=m  
 	routes.simple.module=o
 
-#####控制器由参数c决定，动作有 m 决定。比如如下demo Url：
+##### 控制器由参数c决定，动作有 m 决定。比如如下demo Url：
 
 http://localhost/index.php?c=test&m=manUser&name=bigbox&sex=%E7%94%B7&age=51
 
@@ -75,7 +75,7 @@ http://localhost/index.php?c=test&m=manUser&name=bigbox&sex=%E7%94%B7&age=51
 	}  
 
 
-#####入口
+##### 入口
 
 superci/index.php
 
@@ -84,7 +84,7 @@ superci/index.php
 	$app = new Yaf_Application(APPPATH . "/conf/application.ini");  
 	$app->bootstrap()->run();  
 
-#####Bootstrap启动过程
+##### Bootstrap启动过程
 
 文件位于superci/application/bootstrap.php， Yaf的初始化逻辑， 每个_init开头的函数都会被顺序执行，用户也可以在这里添加自己的初始化逻辑
 
@@ -118,7 +118,7 @@ superci/index.php
     }  
 
 
-#####过滤器插件
+##### 过滤器插件
 
 在bootstrap.php 中， 有注册插件 _initPlugins ，我们注册了一个过滤器FilterPlugin，插件定义了6个Hook。
 
@@ -150,7 +150,7 @@ superci/index.php
 	}  
 
 
-#####控制层
+##### 控制层
 
 所有控制器位于：superci/application/controllers 目录，所有控制器继承自Core_Controller方法，里面主要获取GET/POST参数，以及返回数据的处理，Core_Controller继承自 Yaf_Controller_Abstract， init方法会被自动调用，更多细节参考 Yaf 框架控制器。
 
@@ -175,20 +175,20 @@ superci/index.php
 	    }  
 	}  
 
-#####模型层
+##### 模型层
 所有的Model层位于 superci/application/models目录，
 
 通过 $this->example_model = Loader::model('ExampleModel'); 加载模型
 
 
 
-#####VIEW层
+##### VIEW层
 
 视图层参考yaf视图渲染那部分， 我没有写案例。
 
 
 
-#####APP应用配置
+##### APP应用配置
 
 所有配置位于 superci/application/config目录
 
@@ -196,7 +196,7 @@ superci/index.php
 
 
 
-#####公共类加载
+##### 公共类加载
 
 所有的公共类库位于superci/application/library目录，但是注意的是， 如果你的类位于library子目录下面，你的类必须用下划线"_"分隔；
 
@@ -206,7 +206,7 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 
 
 
-#####公共函数
+##### 公共函数
 
 所有的公共类库位于superci/application/helpers目录
 
@@ -214,7 +214,7 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 
 
 
-#####数据库操作
+##### 数据库操作
 
 数据库操作与CI操作一致，如下，具体细节可以参考CI框架，底层引擎采用phalcon，用户可以从下载包中获取被摘取
 
@@ -244,7 +244,7 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 
 
 
-#####日志
+##### 日志
 
 日志使用方法如下：
 
@@ -266,7 +266,7 @@ FATAL和ERROR级别日志文件以 .wf 结尾， DEBUG级别日志文件以.debu
 
 
 
-####日志格式: [日志级别] [时间] [错误代码] [文件|行数] [ip] [uri] [referer] [cookie] [统计信息] "内容"
+#### 日志格式: [日志级别] [时间] [错误代码] [文件|行数] [ip] [uri] [referer] [cookie] [统计信息] "内容"
 
 [ERROR] [2018-05-10 14:12:38] [0] [Test.php|31] [192.168.37.41] [/index.php?c=test&m=manUser&name=&sex=%E7%94%B7&age=51] [] [uuid=eeced9c342ae1a4010c815d253cbf892; Hm_lvt_ff8e5ea3d826cc3ff9e62f38fb25f05b=1506585535,1506585546,1506585753,1506585757; BDTUJIAID=062546b9e6f05ba8dcd03fcd00e8aec9; UM_distinctid=1626732575637-0363efcaa-671d107a-1fa400-16267325757483; iciba_u_rand=f81419f1f1f83a9627fa928b356020cc%40114.251.146.132; iciba_u_rand_t=1523429063; _last_active=a%3A3%3A%7Bs%3A1%3A%22i%22%3Bs%3A8%3A%2214406053%22%3Bi%3A0%3Bi%3A1524725552%3Bs%3A1%3A%22u%22%3Bs%3A12%3A%22my.iciba.com%22%3B%7D] - "name is empty"
 
