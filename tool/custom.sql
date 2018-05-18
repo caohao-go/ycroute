@@ -1,15 +1,16 @@
-#´´½¨Êı¾İ¿â test
+#åˆ›å»ºæ•°æ®åº“ test
 CREATE TABLE `customer` (
-  `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ÓÃ»§id',
-  `name` varchar(60) NOT NULL COMMENT 'Ãû×Ö',
-  `sex` varchar(8) NOT NULL COMMENT 'ĞÔ±ğ',
-  `age` int(11) DEFAULT NULL COMMENT 'ÄêÁä',
+  `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ç”¨æˆ·id',
+  `name` varchar(60) NOT NULL COMMENT 'åå­—',
+  `sex` varchar(8) NOT NULL COMMENT 'æ€§åˆ«',
+  `age` int(11) DEFAULT NULL COMMENT 'å¹´é¾„',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-insert into customer values(1, '²ÜºÅ', 'ÄĞ', 29);
-insert into customer values(2, 'smallhow', 'ÄĞ', 33);
-insert into customer values(3, 'candy', 'Å®', 19);
-insert into customer values(4, 'goes', 'Å®', 36);
-insert into customer values(5, 'robot', 'ÄĞ', 17);
-insert into customer values(6, 'mary', 'ÄĞ', 43);
+insert into customer values(1, 'æ›¹å·', 'ç”·', 29);
+insert into customer values(2, 'smallhow', 'ç”·', 33);
+insert into customer values(3, 'candy', 'å¥³', 19);
+insert into customer values(4, 'goes', 'å¥³', 36);
+insert into customer values(5, 'robot', 'ç”·', 17);
+insert into customer values(6, 'mary', 'ç”·', 43);
+

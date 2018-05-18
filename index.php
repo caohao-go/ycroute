@@ -18,3 +18,4 @@ define("APPPATH", realpath(dirname(__FILE__) . '/'));
 define("BASEPATH", APPPATH . '/system');
 $app = new Yaf_Application(APPPATH . "/conf/application.ini");
 $app->bootstrap()->run();
+

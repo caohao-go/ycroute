@@ -1,6 +1,6 @@
-ĞèÒª°²×°µÄÀ©Õ¹£º
+éœ€è¦å®‰è£…çš„æ‰©å±•ï¼š
 opcache.so
 yaf.so
 
-²âÊÔurl:
+æµ‹è¯•url:
 http://localhost/index.php?c=test&m=manUser&name=bigbox&sex=%E7%94%B7&age=51
