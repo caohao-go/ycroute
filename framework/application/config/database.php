@@ -53,7 +53,7 @@ $db['default']['autoinit'] = FALSE;
 
 $db['payinfo']['host']     = '127.0.0.1';
 $db['payinfo']['username'] = 'root';
-$db['payinfo']['password'] = 'cao123123';
+$db['payinfo']['password'] = 'test123123';
 $db['payinfo']['dbname']   = 'payinfo';
 $db['payinfo']['pconnect'] = FALSE;
 $db['payinfo']['db_debug'] = TRUE;

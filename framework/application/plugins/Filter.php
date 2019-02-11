@@ -38,62 +38,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     //验签过程
     protected function _auth()
     {
-    	if($this->params['no'] == "test") { //测试
-    		return;
-    	}
-    	
-    	if (empty($this->params['client'])) {
-				$this->response_error(99990001, 'params error');
-			}
-
-			if (empty($this->params['auth_rand'])) {
-				$this->response_error(99990002, 'params error');
-			}
-			
-			if (empty($this->params['timestamp'])) {
-				$this->response_error(99990003, 'params error');
-			}
-			
-			if (empty($this->params['v'])) {
-				$this->response_error(99990004, 'params error');
-			}
-			
-			if (empty($this->params['signature'])) {
-				$this->response_error(99990005, 'params error');
-			}
-			
-    	$auth_params = $this->params;
-    	$c = $this->params['c'];
-    	$m = $this->params['m'];
-    	unset($auth_params['c']);
-    	unset($auth_params['m']);
-    	unset($auth_params['signature']);
-			unset($auth_params['callback']);
-			unset($auth_params['_']);
-			
-    	$str = "/" . $c . "/" . substr($m, 1) . "/" . $auth_params['token'] . "/"; // 加密串str = "/游戏名/接口/token/"
-			
-    	unset($auth_params['token']);  // 去掉 token
-			ksort($auth_params);  //数组按 key 排序
-			reset($auth_params);  //重置数组指针指向第一个元素
-    	
-			foreach ($auth_params as $param_value) {  //将有序串加入到加密串 str
-				$str = $str . trim($param_value);
-			}
-			
-			$signature = md5($str); //加密得到 signature
-			
-			if($signature != $this->params['signature']) {  //加密之后与上送的signature 比较，如果不一致则验证失败
-				$this->response_error(99990006, "params error");
-			}
-			
-			$redis = Loader::redis("default");
-			if(!empty($redis->get("signature_$signature"))) {
-				$this->response_error(99990016, "params error");
-			}
-			
-			$redis->set("signature_$signature", 1);
-			$redis->expire("signature_$signature", 3600);
+        //在这里写你的验签逻辑
     }
     
     /**
