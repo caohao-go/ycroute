@@ -327,7 +327,7 @@ $data = $this->db->get_one("user_info", ['user_id' => 6818810]);
     "country":"China",
     "appid":"wx385863ba15f573b6",
     "gender":1,
-    "form_id":""
+    "form_id":"" 
 }
 ```
 
