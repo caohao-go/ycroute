@@ -425,7 +425,7 @@ userinfo.20190211.log  userinfo.20190211.log.wf
 
 日志格式: [日志级别] [时间] [错误代码] [文件|行数] [ip] [uri] [referer] [cookie] [统计信息] "内容"
 ```shell
-[INFO] [2019-02-11 18:57:01] - - [218.30.116.8] - - - [] "register success"<br>
+[INFO] [2019-02-11 18:57:01] - - [218.30.116.8] - - - [] "register success"
 [ERROR] [2019-02-11 18:57:01] [0] [index.php|23 => | => User.php|35 => Userinfo.php|93] [218.30.116.8] [/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e] [] [] - "not find userinfo"
 ```
 
