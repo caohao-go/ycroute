@@ -19,7 +19,7 @@ SuperCI
 
 ## 运行环境
 
-运行环境： PHP 7 ，  opcache 
+运行环境： PHP 7 
 
 依赖扩展： yaf 、  ycdatabase 扩展 
 
