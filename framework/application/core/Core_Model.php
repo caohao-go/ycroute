@@ -25,7 +25,7 @@ class Core_Model {
 
         $redis = Loader::redis($this->redis_conf_path);
         if (!empty($redis)) {
-            //return $redis->get($redis_key);
+            return $redis->get($redis_key);
         }
     }
 
