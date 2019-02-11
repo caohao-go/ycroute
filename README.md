@@ -77,9 +77,26 @@ class UserController extends Core_Controller
 }  
 ```
 
+## 过滤验签
+framework/application/plugins/Filter.php  ，  在 _auth 中写入验签方法，所有接口都会在这里校验， 所有GET、POST等参数放在 $this->params 里。
+```php
+class FilterPlugin extends Yaf_Plugin_Abstract {
+    var $params;
 
-/application/plugins/Filter.php  ，  在 _auth 中写入验签方法，所有接口都会在这里校验， 所有GET、POST等参数放在 $this->params 里。
-
+    //路由之前调用
+    public function routerStartUp ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response) {
+        $this->params = & $request->getParams();
+       
+       	$this->_auth();
+    }
+    
+    
+    //验签过程
+    protected function _auth()
+    {
+        //在这里写你的验签逻辑
+    }
+```
 ##### 入口
 
 superci/index.php
