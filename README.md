@@ -50,31 +50,35 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 framework/conf/application.ini
 
 ##### 我们看看路由配置部分
-
-	routes.regex.type="regex"  
-	routes.regex.match="#^/list/([^/]*)/([^/]*)#"  
-	routes.regex.route.controller=Index  
-	routes.regex.route.action=action  
-	routes.regex.map.1=name  
-	routes.regex.map.2=value  
-	routes.simple.type="simple"  
-	routes.simple.controller=c  
-	routes.simple.action=m  
-	routes.simple.module=o
+```php
+routes.regex.type="regex"  
+routes.regex.match="#^/list/([^/]*)/([^/]*)#"  
+routes.regex.route.controller=Index  
+routes.regex.route.action=action  
+routes.regex.map.1=name  
+routes.regex.map.2=value  
+routes.simple.type="simple"  
+routes.simple.controller=c  
+routes.simple.action=m  
+routes.simple.module=o
+```
 
 ##### 控制器由参数c决定，动作有 m 决定。比如如下demo Url：
 
 http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
 
-程序将被路由到superci/application/controllers/Test.php文件的 TestController::manUserAction方法，其它路由细节参考Yaf框架
+程序将被路由到 framework/application/controllers/User.php文件的 UserController::getUserInfoAction方法，其它路由细节参考Yaf框架
+```php
+class UserController extends Core_Controller  
+{  
+    public function getUserInfoAction()  
+    {  
+    }  
+}  
+```
 
-	class TestController extends Core_Controller  
-	{  
-    	public function manUserAction()  
-    	{  
-    	}  
-	}  
 
+/application/plugins/Filter.php  ，  在 _auth 中写入验签方法，所有接口都会在这里校验， 所有GET、POST等参数放在 $this->params 里。
 
 ##### 入口
 
