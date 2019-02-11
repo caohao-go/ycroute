@@ -13,6 +13,7 @@ class Core_Model {
 
     public function __construct() {
         $this->util_log = Logger::get_instance('core_model_log');
+        $this->redis_conf_path = 'default_master';   //用到快速缓存时，需要在 __construct 构造函数中加上 redis  缓存配置
     }
 
     /**
@@ -22,7 +23,7 @@ class Core_Model {
     private function get_redis($redis_key) {
         if (empty($redis_key)) return;
 
-        $redis = Loader::redis("default");
+        $redis = Loader::redis($this->redis_conf_path);
         if (!empty($redis)) {
             //return $redis->get($redis_key);
         }
@@ -38,7 +39,7 @@ class Core_Model {
     private function set_redis($redis_key, $data, $redis_expire, $set_empty_flag) {
         if (empty($redis_key)) return;
 
-        $redis = Loader::redis("default");
+        $redis = Loader::redis($this->redis_conf_path);
         if (!empty($redis)) {
             if (empty($data) && $set_empty_flag) {
                 $redis->set($redis_key, self::EMPTY_STRING);
@@ -58,7 +59,7 @@ class Core_Model {
             return;
         }
 
-        $redis = Loader::redis("default");
+        $redis = Loader::redis($this->redis_conf_path);
         if (!empty($redis)) {
             $redis->del($redis_key);
         }
