@@ -234,7 +234,7 @@ class Core_Model {
     ////////////////////////////// 业务相关 /////////////////////////////////////////
     //分数更新，修改排名
     public function modify_rank($project_name, $userid, $score) {
-        $redis = Loader::redis('default');
+        $redis = Loader::redis($this->redis_conf_path);
         if (empty($redis)) {
             return false;
         }
@@ -245,7 +245,7 @@ class Core_Model {
 
     //获取我的排名
     public function get_my_rank($project_name, $userid) {
-        $redis = Loader::redis('default');
+        $redis = Loader::redis($this->redis_conf_path);
         if (empty($redis)) {
             return 0;
         }
@@ -257,7 +257,7 @@ class Core_Model {
 
     //获取排名列表
     public function get_rank_list($project_name, $return_userinfo_flag = true, $start = 0, $end = 99) {
-        $redis = Loader::redis('default');
+        $redis = Loader::redis($this->redis_conf_path);
         if (empty($redis)) {
             return array();
         }
@@ -299,7 +299,7 @@ class Core_Model {
 
     //清理排名
     public function clear_rank($project_name) {
-        $redis = Loader::redis('default');
+        $redis = Loader::redis($this->redis_conf_path);
         if (empty($redis)) {
             return array();
         }
@@ -310,7 +310,7 @@ class Core_Model {
 
     //清理我的排行
     public function clear_my_rank($project_name, $userid) {
-        $redis = Loader::redis('default');
+        $redis = Loader::redis($this->redis_conf_path);
         if (empty($redis)) {
             return 0;
         }
