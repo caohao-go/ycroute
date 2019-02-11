@@ -51,15 +51,27 @@ $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['autoinit'] = FALSE;
 
-$db['payinfo']['host']     = '127.0.0.1';
-$db['payinfo']['username'] = 'root';
-$db['payinfo']['password'] = 'test123123';
-$db['payinfo']['dbname']   = 'payinfo';
-$db['payinfo']['pconnect'] = FALSE;
-$db['payinfo']['db_debug'] = TRUE;
-$db['payinfo']['char_set'] = 'utf8';
-$db['payinfo']['dbcollat'] = 'utf8_general_ci';
-$db['payinfo']['autoinit'] = FALSE;
+$db['payinfo_master']['host']     = '127.0.0.1';
+$db['payinfo_master']['username'] = 'root';
+$db['payinfo_master']['password'] = 'test123123';
+$db['payinfo_master']['dbname']   = 'payinfo';
+$db['payinfo_master']['pconnect'] = FALSE;
+$db['payinfo_master']['db_debug'] = TRUE;
+$db['payinfo_master']['char_set'] = 'utf8';
+$db['payinfo_master']['dbcollat'] = 'utf8_general_ci';
+$db['payinfo_master']['autoinit'] = FALSE;
+$db['payinfo_master']['port'] = 3306;
+
+$db['payinfo_slave']['host']     = '192.168.0.7';
+$db['payinfo_slave']['username'] = 'root';
+$db['payinfo_slave']['password'] = 'test123123';
+$db['payinfo_slave']['dbname']   = 'payinfo';
+$db['payinfo_slave']['pconnect'] = FALSE;
+$db['payinfo_slave']['db_debug'] = TRUE;
+$db['payinfo_slave']['char_set'] = 'utf8';
+$db['payinfo_slave']['dbcollat'] = 'utf8_general_ci';
+$db['payinfo_slave']['autoinit'] = FALSE;
+$db['payinfo_slave']['port'] = 3306;
 
 
 /* End of file database.php */
