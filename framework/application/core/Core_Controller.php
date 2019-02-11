@@ -24,11 +24,11 @@ class Core_Controller extends Yaf_Controller_Abstract {
     */
     protected function response_success($message = array())
     {
-        if(empty($message) || empty($message['tagcode'])) {
+        if(empty($message) || empty($message['errno'])) {
             if(empty($message)) {
-                $message = array('tagcode' => '00000000');
+                $message = array('errno' => 0);
             } else {
-                $code = array('tagcode' => '00000000');
+                $code = array('errno' => 0);
                 $message = array_merge($code, $message);
             }
         }
@@ -55,7 +55,7 @@ class Core_Controller extends Yaf_Controller_Abstract {
      */
     protected function response_error($code, $message)
     {
-        $data = array("tagcode" => "" . $code, "description" => $message);
+        $data = array("errno" => intval($code), "errmsg" => $message);
         if(empty($this->params['callback'])) {
             header('Content-Type: application/json');
             echo json_encode($data);

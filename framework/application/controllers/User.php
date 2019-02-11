@@ -16,7 +16,7 @@ class UserController extends Core_Controller {
         $this->util_log = Logger::get_instance('user_log'); //日志
         Loader::helper('common_helper'); //公共函数
 
-        $this->sample = Loader::library('sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
+        $this->sample = Loader::library('Sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }
 
     //获取用户信息接口
@@ -40,7 +40,7 @@ class UserController extends Core_Controller {
         if (empty($token) || $token != $userInfo['token']) {
             $this->response_error(10000024, "token 校验失败");
         }
-        
+
         $this->response_success($userInfo);
     }
 
