@@ -1,53 +1,31 @@
 SuperCI
 ===
 
-#### 我们自己的业务之前框架是基于CI框架写的，设计接口达到500多个，如果全面改用其他框架，修改工作量将非常大，如何在不大规模修改业务代码的基础上让它性能更高成为我研究的方向！
+
+## 框架介绍
+框架由3层架构构成，Controller、Model、View 层，基于yaf, ycdatabase 扩展 ，支持PHP7，优点如下：
+1、框架层次分明、使用简洁（开箱即用）、性能高（yaf、数据库orm都是C语言扩展）、功能强大。
+
+2、支持MySQL数据库 ORM 代理，支持Redis代理，简便的主从配置。
+
+3、强大稳定的数据库/redis连接池支持。
+
+4、强大的日志模块、异常捕获模块。
+
+5、基于PHP7，代码缓存opcache。
 
 ###### 图文介绍：https://blog.csdn.net/caohao0591/article/details/80271974
 
-#### 越是简单的东西越是好的，基于此最近研究了PHP的各种框架， 有yaf, phalcon, CI框架， 
 
-+ 其中Yaf 是PHP国内第一人写的纯C框架， 核心在于路由部分与类的加载功能， 可惜没有数据库ORM操作，极轻量级。
+## 运行环境
 
-+ phalcon是国外非常火的一个框架，也是一个纯C框架，非常重量级，过于臃肿，文档不太完善。
+运行环境： PHP 7 ，  opcache 
 
-+ CI也是一个市场占有率非常高的框架，是纯PHP框架，适度轻量级，文档丰富，性能不及 Yaf 的 1/3。
+依赖扩展： yaf 、  ycdatabase 扩展 
 
+## 路由配置
+framework/conf/application.ini
 
-#### 依照上面的原理，我对项目进行了优化升级，在此基础上开发了一个新的轻量级组合框架，命名为 SuperCI：
-
-+ 考虑之前做的项目都是CI框架，如果全部推翻，将会有超级多的东西需要修改，所以我将CI引擎替换，但是SuperCI对外提供的调用方式不变，
-
-+ 首先我将CI框架的路由部分抽取出来， 替换成Yaf。
-
-+ 然后将CI的数据库ORM操作底层引擎替换成Phalcon， 然而这并不是一个全部的Phalcon， 而是将Phalcon所有其它模块全部删除，仅保留DB操作部分，重新编译之后生成的ORM引擎，替换到CI的数据库底层操作，相当于给五菱宏光装上了悍马的发动机，数据库操作性能能提升2倍。
-
-+ 代码模块分离，并加入自己写的模块、类库、配置加载类。
-
-+ 加入自己的日志记录类
-
-+ 替换 PHP 5 到 PHP 7 ， 开启代码缓存opcache。
-
-##### 通过以上工作，CPU利用率提升10倍，内存使用大幅提升，响应时间降低到原来50%， 线上运行半年，稳定可靠，线上服务器使用减少2/3，框架极度轻量级， 越是简单的东西越是好的，不说了，上图上源码。
-
-
-
-框架介绍
-===
-
-运行环境： PHP 7 / PHP 5，  opcache 
-
-依赖扩展： yaf.so ,  phalcon.so 
-
-注意：官网的phalcon, 在PHP7下，由于phalcon的一个数据库绑定导致的 opcache 会和 phalcon冲突，导致两个不能同时用， 两者都是提升性能的利器，尤其 Opcache，能提升1倍性能， 请用我提供的源码中的tool/phalcon的源码重新编译生成 phalcon.so，这里的源码去掉了phalcon除了数据库DB操作以外的所有功能，而且解决了与opcache冲突的问题。
-
-如果是PHP5需要到phalcon官网去下载扩展。
-
-
-
-##### 配置文件
-
-superci/conf/application.ini
 ##### 我们看看路由配置部分
 
 	routes.regex.type="regex"  
@@ -63,7 +41,7 @@ superci/conf/application.ini
 
 ##### 控制器由参数c决定，动作有 m 决定。比如如下demo Url：
 
-http://localhost/index.php?c=test&m=manUser&name=bigbox&sex=%E7%94%B7&age=51
+http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
 
 程序将被路由到superci/application/controllers/Test.php文件的 TestController::manUserAction方法，其它路由细节参考Yaf框架
 
