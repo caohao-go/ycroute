@@ -1,7 +1,6 @@
 SuperCI
 ===
 
-
 ## 框架介绍
 框架由3层架构构成，Controller、Model、View 层，基于yaf, ycdatabase 扩展 ，支持PHP7，优点如下： <br>
 
@@ -15,7 +14,7 @@ SuperCI
 
 5、基于PHP7，代码缓存opcache。
 
-###### 图文介绍：https://blog.csdn.net/caohao0591/article/details/80271974
+###### 图文介绍：
 
 
 ## 运行环境
@@ -97,105 +96,49 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
         //在这里写你的验签逻辑
     }
 ```
-##### 入口
-
-superci/index.php
-
-定义目录，加载Yaf_Application
-
-	$app = new Yaf_Application(APPPATH . "/conf/application.ini");  
-	$app->bootstrap()->run();  
-
-##### Bootstrap启动过程
-
-文件位于superci/application/bootstrap.php， Yaf的初始化逻辑， 每个_init开头的函数都会被顺序执行，用户也可以在这里添加自己的初始化逻辑
-
-	public function _initConfig() {  
-        $config = Yaf_Application::app()->getConfig();  
-        Yaf_Registry::set("config", $config);  
-    }  
-  
-    public function _initRoute(Yaf_Dispatcher $dispatcher) {  
-        $router = Yaf_Dispatcher::getInstance()->getRouter();  
-        $router->addConfig(Yaf_Registry::get("config")->routes);  
-    }  
-      
-    public function _initCommon(Yaf_Dispatcher $dispatcher) { //注册插件  
-        require_once(BASEPATH . "/Request.php");  
-        require_once(BASEPATH . "/Loader.php");  
-        require_once(BASEPATH . "/Logger.php");  
-    }  
-      
-    public function _initRequest(Yaf_Dispatcher $dispatcher) { //初始化请求  
-        $dispatcher->setRequest(new Request());  
-    }  
-      
-    public function _initPlugins(Yaf_Dispatcher $dispatcher) { //注册插件  
-        $dispatcher->registerPlugin(new FilterPlugin());  
-    }  
-  
-    public function _initException() { //设置异常回调  
-        include_once(BASEPATH . "/Common.php");  
-        set_error_handler('_exception_handler');  
-    }  
-
-
-##### 过滤器插件
-
-在bootstrap.php 中， 有注册插件 _initPlugins ，我们注册了一个过滤器FilterPlugin，插件定义了6个Hook。
-
-
-	触发顺序    名称  触发时机    说明  
-	1   routerStartup   在路由之前触发 这个是7个事件中, 最早的一个. 但是一些全局自定的工作, 还是应该放在Bootstrap中去完成  
-	2   routerShutdown  路由结束之后触发    此时路由一定正确完成, 否则这个事件不会触发  
-	3   dispatchLoopStartup 分发循环开始之前被触发    
-	4   preDispatch 分发之前触发  如果在一个请求处理过程中, 发生了forward, 则这个事件会被触发多次  
-	5   postDispatch    分发结束之后触发    此时动作已经执行结束, 视图也已经渲染完成. 和preDispatch类似, 此事件也可能触发多次  
-	6   dispatchLoopShutdown    分发循环结束之后触发  此时表示所有的业务逻辑都已经运行完成, 但是响应还没有发送  
-我们将验签的过程放在路由之前，如果进来的请求，验签失败，则直接报错。
-
-	class FilterPlugin extends Yaf_Plugin_Abstract {  
-	    var $params;  
-	  
-	    //路由之前调用  
-	    public function routerStartUp ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response) {  
-	        $this->params = & $request->getParams();  
-	          
-	        $this->_auth();  
-	    }  
-	      
-	     //验签过程  
-	    protected function _auth()  
-	    {  
-	        //$this->response_error(1, "验签失败");  
-	    }  
-	}  
-
 
 ##### 控制层
 
-所有控制器位于：superci/application/controllers 目录，所有控制器继承自Core_Controller方法，里面主要获取GET/POST参数，以及返回数据的处理，Core_Controller继承自 Yaf_Controller_Abstract， init方法会被自动调用，更多细节参考 Yaf 框架控制器。
+所有控制器位于：framework/application/controllers 目录，所有控制器继承自Core_Controller方法，里面主要获取GET/POST参数，以及返回数据的处理，Core_Controller继承自 Yaf_Controller_Abstract， init方法会被自动调用，更多细节参考 Yaf 框架控制器。
+```php
+class UserController extends Core_Controller {
+    public function init() {
+        parent::init(); //必须
 
-	class TestController extends Core_Controller  
-	{  
-	    public function init()  
-	    {  
-	        parent::init();  
-	        $this->example_model = Loader::model('ExampleModel');  
-	    }  
-	      
-	    public function manUserAction()  
-	    {  
-	        $this->logger->LogInfo("manUser: " . createLinkstringUrlencode($this->params));  
-	          
-	        //数据返回  
-	        $res = array();  
-	        $res['uid'] = $this->example_model->insert_data($this->params['name'], $this->params['sex'], $this->params['age']);  
-	        ...  
-	          
-	        $this->response_success($res);  
-	    }  
-	}  
+        $this->user_model = Loader::model('UserinfoModel'); //模型层
+
+        $this->util_log = Logger::get_instance('user_log'); //日志
+        Loader::helper('common_helper'); //公共函数
+
+        $this->sample = Loader::library('sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
+    }
+
+    //获取用户信息接口
+    public function getUserInfoAction() {
+        $userId = $this->params['userid'];
+        $token = $this->params['token'];
+
+        if (empty($userId)) {
+            $this->response_error(10000017, "user_id is empty");
+        }
+
+        if (empty($token)) {
+            $this->response_error(10000016, "token is empty");
+        }
+
+        $userInfo = $this->user_model->getUserinfoByUserid($userId);
+        if (empty($userInfo)) {
+            $this->response_error(10000023, "未找到该用户");
+        }
+
+        if (empty($token) || $token != $userInfo['token']) {
+            $this->response_error(10000024, "token 校验失败");
+        }
+        
+        $this->response_success($userInfo);
+    }
+}
+```
 
 ##### 模型层
 所有的Model层位于 superci/application/models目录，
