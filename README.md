@@ -390,13 +390,11 @@ var_dump($config);
 ```php
 $this->sample = Loader::library('Sample');
 ```
-
 加载的就是 framework/application/library/Sample.php 中的 Sample类。
 
 ```php
 $this->ip_location = Loader::library('Ip_Location');
 ```
-
 加载的是 framework/application/library/Ip/Location.php 中的Ip_Location类
 
 ## 公共函数
