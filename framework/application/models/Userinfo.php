@@ -44,7 +44,7 @@ class UserinfoModel extends Core_Model {
         if ($ret != -1) {
             return $data['token'];
         } else {
-            $this->util_log->LogError("error to insert_trade_info, DATA=[".json_encode($data)."]");
+            $this->util_log->LogError("error to register_user, DATA=[".json_encode($data)."]");
             return false;
         }
     }
