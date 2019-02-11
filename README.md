@@ -2,13 +2,13 @@ SuperCI
 ===
 
 ## 框架介绍
-框架由3层架构构成，Controller、Model、View 层，基于yaf, ycdatabase 扩展 ，支持PHP7，优点如下： <br>
+框架由3层架构构成，Controller、Model、View 层，基于yaf, ycdatabase 扩展(支持稳定、强大的数据库连接池) ，支持PHP7，优点如下： <br>
 
 1、框架层次分明、使用简洁（开箱即用）、性能高（yaf、数据库orm都是C语言扩展）、功能强大。
 
 2、支持MySQL数据库 ORM 代理，支持Redis代理，简便的主从配置。
 
-3、强大稳定的数据库/redis连接池支持。
+3、稳定强大的数据库/redis连接池支持。参考 https://blog.csdn.net/caohao0591/article/details/85255704
 
 4、强大的日志模块、异常捕获模块。
 
@@ -234,7 +234,7 @@ $data = $redis->get("pre_redis_user_${userid}");
 ## 数据库操作
 数据库加载：  Loader::database("default");   参数为framework/application/config/redis.php 配置键值，如下：
 ```php
-$db['default']['unix_socket'] = '/var/run/mysql_sock/mysql_user_pool.sock';  //unix socket 数据库连接池，使用参考 https://blog.csdn.net/caohao0591/article/details/85255704
+$db['default']['unix_socket'] = '/var/run/mysql_sock/mysql_user_pool.sock';  //unix socket 数据库连接池，具体使用参考 https://blog.csdn.net/caohao0591/article/details/85255704
 $db['default']['pconnect'] = FALSE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['char_set'] = 'utf8';
@@ -264,12 +264,125 @@ $db['payinfo_slave']['autoinit'] = FALSE;
 $db['payinfo_slave']['port'] = 3306;
 ```
 
+#### 原生SQL：
+```php
+$data = $this->db->query("select * from user_info where country='China' limit 3");
+```
 
+#### 查询多条记录：
+```php
+$data = $this->db->get("user_info", ['regist_time[<]' => '2018-06-30 15:48:39', 
+                                    'gender' => 1,
+                                    'country' => 'China',
+				    'city[!]' => null,
+                                    'ORDER' => [
+                                        "user_id",
+                                        "regist_time" => "DESC",
+                                        "amount" => "ASC"
+                                        ],
+                                    'LIMIT' => 10], "user_id,nickname,city");
+echo json_encode($data);exit;
+```
+```json
+[
+    {
+        "nickname":"芒果",
+        "user_id":6818810,
+        "city":"Yichun"
+    },
+    {
+        "nickname":"Smile、格调",
+        "user_id":6860814,
+        "city":"Guangzhou"
+    },
+    {
+        "nickname":"Yang",
+        "user_id":6870818,
+        "city":"Hengyang"
+    },
+    {
+        "nickname":"凉之渡",
+        "user_id":7481824,
+        "city":"Guangzhou"
+    }
+]
+```
+
+#### 查询单条记录
+```php
+$data = $this->db->get_one("user_info", ['user_id' => 6818810]);
+```
+```json
+{
+    "union":null,
+    "amount":0,
+    "session_key":"Et1yjxbEfRqVmCVsYf5qzA==",
+    "open_id":"oXtwn4wkPO4FhHmkan097DpFobvA",
+    "nickname":"芒果",
+    "last_login_time":"2018-10-04 16:01:27",
+    "regist_time":"2018-06-29 21:24:45",
+    "user_id":6818810,
+    "token":"5a350bc05bbbd9556f719a0b8cf2a5ed",
+    "updatetime":"2018-10-04 16:01:27",
+    "avatar_url":"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epqg7FwyBUGd5xMXxLQXgW2TDEBhnNjPVla8GmKiccP0pFiaLK1BGpAJDMiaoyGHR9Nib2icIX9Na4Or0g/132",
+    "city":"Yichun",
+    "province":"Jiangxi",
+    "country":"China",
+    "appid":"wx385863ba15f573b6",
+    "gender":1,
+    "form_id":""
+}
+```
+
+#### 插入数据
+```php
+function register_user($appid, $userid, $open_id, $session_key) {
+	$data = array();
+        $data['appid'] = $appid;
+        $data['user_id'] = $userid;
+        $data['open_id'] = $open_id;
+        $data['session_key'] = $session_key;
+        $data['last_login_time'] = $data['regist_time'] = date('Y-m-d H:i:s', time());
+        $data['token'] = md5(TOKEN_GENERATE_KEY . time() . $userid . $session_key);
+        $ret = $this->db->insert("user_info", $data);
+        if ($ret != -1) {
+            return $data['token'];
+        } else {
+            $this->util_log->LogError("error to register_user, DATA=[".json_encode($data)."]");
+            return false;
+        }
+}
+```
+
+#### 更新数据
+```php
+function update_user($userid, $update_data) {
+        $redis = Loader::redis("userinfo");
+        $redis->del("pre_redis_user_info_" . $userid);
+
+        $ret = $this->db->update("user_info", ["user_id" => $userid], $update_data);
+        if ($ret != -1) {
+            return true;
+        } else {
+            $this->util_log->LogError("error to update_user, DATA=[".json_encode($update_data)."]");
+            return false;
+        }
+}
+```
+
+#### 删除操作
+```php
+$ret = $this->db->delete("user_info", ["user_id" => 7339820]);
+```
+
+
+#### 更多操作参考
+英文： https://github.com/caohao-php/ycdatabase
+中文： https://blog.csdn.net/caohao0591/article/details/84390713
 
 ##### VIEW层
 
 视图层参考yaf视图渲染那部分， 我没有写案例。
-
 
 
 ##### APP应用配置
