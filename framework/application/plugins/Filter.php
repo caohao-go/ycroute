@@ -15,10 +15,8 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     //路由之前调用
     public function routerStartUp ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response) {
         $this->params = & $request->getParams();
-        
-        if($this->params['c'] == 'dabaojian') {
-        	$this->_auth();
-        }
+
+        $this->_auth();
     }
     
     //路由结束之后
