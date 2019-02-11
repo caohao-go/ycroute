@@ -24,6 +24,7 @@ SuperCI
 依赖扩展： yaf 、  ycdatabase 扩展 
 
 yaf 介绍以及安装： https://github.com/laruence/yaf
+
 ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 
 ## 代码结构
@@ -97,7 +98,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     }
 ```
 
-##### 控制层
+## 控制层
 
 所有控制器位于：framework/application/controllers 目录，所有控制器继承自Core_Controller方法，里面主要获取GET/POST参数，以及返回数据的处理，Core_Controller继承自 Yaf_Controller_Abstract， init方法会被自动调用，更多细节参考 Yaf 框架控制器。
 ```php
@@ -137,6 +138,31 @@ class UserController extends Core_Controller {
         
         $this->response_success($userInfo);
     }
+}
+```
+
+通过 $this->response_error(10000017, 'user_id is empty'); 返回错误结果 <br>
+通过 $this->response_success($result);  返回JSON格式成功结果，格式如下： 
+```json
+{
+    "tagcode":"00000000",
+    "union":"",
+    "amount":0,
+    "session_key":"ZqwsC+Spy4C31ThvqkhOPg==",
+    "open_id":"oXtwn4_mrS4zIxtSeV0yVT2sAuRo",
+    "nickname":"凉之渡",
+    "last_login_time":"2018-09-04 18:53:06",
+    "regist_time":"2018-06-29 22:03:38",
+    "user_id":6842811,
+    "token":"c9bea5dee1f49488e2b4b4645ff3717e",
+    "updatetime":"2018-09-04 18:53:06",
+    "avatar_url":"https://wx.qlogo.cn/mmopen/vi_32/xfxHib91BictV8T4ibRQAibD10DfoNpzpB1LBqZvRrz0icPkN0gdibZg62EPJL3KE1Y5wkPDRAhibibymnQCFgBM2nuiavA/132",
+    "city":"Guangzhou",
+    "province":"Guangdong",
+    "country":"China",
+    "appid":"wx385863ba15f573b6",
+    "gender":1,
+    "form_id":""
 }
 ```
 
