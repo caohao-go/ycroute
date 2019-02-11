@@ -238,15 +238,15 @@ $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['autoinit'] = FALSE;
 
-$db['payinfo_master']['host']     = '127.0.0.1';
-$db['payinfo_master']['username'] = 'root';
-$db['payinfo_master']['password'] = 'test123123';
-$db['payinfo_master']['dbname']   = 'payinfo';
-$db['payinfo_master']['pconnect'] = FALSE;
-$db['payinfo_master']['db_debug'] = TRUE;
+$db['payinfo_master']['host']     = '127.0.0.1';   //地址
+$db['payinfo_master']['username'] = 'root';        //用户名
+$db['payinfo_master']['password'] = 'test123123';  //密码
+$db['payinfo_master']['dbname']   = 'payinfo';     //数据库名
+$db['payinfo_master']['pconnect'] = FALSE;         //是否连接池
+$db['payinfo_master']['db_debug'] = TRUE;          //debug标志，线上关闭，打开后，异常SQL会显示到页面，不安全，（注意，上线一定得将 db_debug 置为 FALSE，否则一定概率可能暴露数据库配置）
 $db['payinfo_master']['char_set'] = 'utf8';
 $db['payinfo_master']['dbcollat'] = 'utf8_general_ci';
-$db['payinfo_master']['autoinit'] = FALSE;
+$db['payinfo_master']['autoinit'] = FALSE;         //自动初始化，Loader的时候就连接，建议关闭
 $db['payinfo_master']['port'] = 3306;
 
 $db['payinfo_slave']['host']     = '192.168.0.7';
