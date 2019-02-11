@@ -28,21 +28,23 @@ yaf 介绍以及安装： https://github.com/laruence/yaf
 ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 
 ## 代码结构
-———————————————— <br>
-|--- system                   //框架系统代码 <br>
-|--- conf                     //yaf配置路径  <br>
-|--- application              //业务代码 <br>
-         |----- config        //配置目录<br>
-         |----- controller    //控制器目录<br>
-                |------ User.php    //Test控制器<br>
-         |----- core          //框架基类目录<br>
-         |----- errors        //错误页目录<br>
-         |----- helpers       //公共函数目录<br>
-         |----- library       //公共类库目录<br>
-         |----- models        //模型层目录<br>
-         |----- plugins       //yaf路由插件目录，路由前后钩子，(接口验签在这里)<br>
-         |----- third         //第三方类库<br>
-         |----- views         //视图层<br>
+```php
+———————————————— 
+|--- system                   //框架系统代码
+|--- conf                     //yaf配置路径 
+|--- application              //业务代码 
+         |----- config        //配置目录
+         |----- controller    //控制器目录
+                |------ User.php    //User控制器
+         |----- core          //框架基类目录
+         |----- errors        //错误页目录
+         |----- helpers       //公共函数目录
+         |----- library       //公共类库目录
+         |----- models        //模型层目录
+         |----- plugins       //yaf路由插件目录，路由前后钩子，(接口验签在这里)
+         |----- third         //第三方类库
+         |----- views         //视图层
+```php
 	 
 ## 路由配置
 framework/conf/application.ini
