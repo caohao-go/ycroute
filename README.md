@@ -377,65 +377,64 @@ $ret = $this->db->delete("user_info", ["user_id" => 7339820]);
 
 
 #### 更多操作参考
-英文： https://github.com/caohao-php/ycdatabase
+英文： https://github.com/caohao-php/ycdatabase<br>
 中文： https://blog.csdn.net/caohao0591/article/details/84390713
 
-##### VIEW层
+## 配置加载
+通过 Loader::config('xxxxx'); 加载 /application/config/xxxxx.php 的配置。例如：
+```php
+$config = Loader::config('config');
+var_dump($config);
+```
 
-视图层参考yaf视图渲染那部分， 我没有写案例。
-
-
-##### APP应用配置
-
-所有配置位于 superci/application/config目录
-
-通过 $config = Loader::config('config');  参数为 config里面文件名称， 比如上面加载的就是 config.php
-
-
-
-##### 公共类加载
-
+## 公共类加载
 所有的公共类库位于superci/application/library目录，但是注意的是， 如果你的类位于library子目录下面，你的类必须用下划线"_"分隔；
+```php
+$this->sample = Loader::library('Sample');
+```
 
-$this->sample = Loader::library('Sample'); 加载的就是 superci/application/library/Sample.php 中的 Sample类。
+加载的就是 framework/application/library/Sample.php 中的 Sample类。
 
-$this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/application/library/Util/Sample.php 中的Util_Sample类
+```php
+$this->ip_location = Loader::library('Ip_Location');
+```
 
+加载的是 framework/application/library/Ip/Location.php 中的Ip_Location类
 
+## 公共函数
+所有的公共类库位于superci/application/helpers目录，通过 Loader::helper('common_helper'); 方法包含进来。
 
-##### 公共函数
-
-所有的公共类库位于superci/application/helpers目录
-
-通过 Loader::helper('common_helper'); 方法包含进来。
-
-
-
-##### 日志
-
+## 日志
 日志使用方法如下：
-
-	$this->logger = Logger::get_instance('test_log');  
-	  
-	$this->logger->LogInfo("manUser: " . createLinkstringUrlencode($this->params));  
-	$this->logger->LogError("name is empty");  
-
-日志级别如下：
-
-	const DEBUG  = 'DEBUG';   /* 级别为 1 ,  调试日志,   当 DEBUG = 1 的时候才会打印调试 */  
-    const INFO   = 'INFO';    /* 级别为 2 ,  应用信息记录,  与业务相关, 这里可以添加统计信息 */  
-    const NOTICE = 'NOTICE';  /* 级别为 3 ,  提示日志,  用户不当操作，或者恶意刷频等行为，比INFO级别高，但是不需要报告*/  
-    const ERROR  = 'ERROR';    /* 级别为 4 ,  警告,   应该在这个时候进行一些修复性的工作，系统可以继续运行下去 */  
-    const WARN   = 'WARN';   /* 级别为 5 ,  错误,     可以进行一些修复性的工作，但无法确定系统会正常的工作下去，系统在以后的某个阶段， 很可能因为当前的这个问题，导致一个无法修复的错误(例如宕机),但也可能一直工作到停止有不出现严重问题 */  
-    const FATAL  = 'FATAL';   /* 级别为 6 ,  严重错误,  这种错误已经无法修复，并且如果系统继续运行下去的话，可以肯定必然会越来越乱, 这时候采取的最好的措施不是试图将系统状态恢复到正常，而是尽可能的保留有效数据并停止运行 */  
+```php
+$this->util_log = Logger::get_instance('userinfo');
+$this->util_log->LogInfo("register success");
+$this->util_log->LogError("not find userinfo");
+```
+日志级别：
+```php
+const DEBUG  = 'DEBUG';   /* 级别为 1 ,  调试日志,   当 DEBUG = 1 的时候才会打印调试 */
+const INFO   = 'INFO';    /* 级别为 2 ,  应用信息记录,  与业务相关, 这里可以添加统计信息 */
+const NOTICE = 'NOTICE';  /* 级别为 3 ,  提示日志,  用户不当操作，或者恶意刷频等行为，比INFO级别高，但是不需要报告*/
+const WARN  = 'WARN';    /* 级别为 4 ,  警告,   应该在这个时候进行一些修复性的工作，系统可以继续运行下去 */
+const ERROR   = 'ERROR';   /* 级别为 5 ,  错误,     可以进行一些修复性的工作，但无法确定系统会正常的工作下去，系统在以后的某个阶段， 很可能因为当前的这个问题，导致一个无法修复的错误(例如宕机),但也可能一直工作到停止有不出现严重问题 */
+const FATAL  = 'FATAL';   /* 级别为 6 ,  严重错误,  这种错误已经无法修复，并且如果系统继续运行下去的话，可以肯定必然会越来越乱, 这时候采取的最好的措施不是试图将系统状态恢复到正常，而是尽可能的保留有效数据并停止运行 */
+```
 
 FATAL和ERROR级别日志文件以 .wf 结尾， DEBUG级别日志文件以.debug结尾，日志目录存放于 /data/app/localhost 下面，localhost为你的项目域名，比如：
+```shell
+[root@gzapi: /data/app/logs/localhost]# ls
+userinfo.20190211.log  userinfo.20190211.log.wf
+```
 
+日志格式: [日志级别] [时间] [错误代码] [文件|行数] [ip] [uri] [referer] [cookie] [统计信息] "内容"
 
+[INFO] [2019-02-11 18:57:01] - - [218.30.116.8] - - - [] "register success"<br>
+[ERROR] [2019-02-11 18:57:01] [0] [index.php|23 => | => User.php|35 => Userinfo.php|93] [218.30.116.8] [/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e] [] [] - "not find userinfo"
 
-#### 日志格式: [日志级别] [时间] [错误代码] [文件|行数] [ip] [uri] [referer] [cookie] [统计信息] "内容"
+## VIEW层
+视图层参考yaf视图渲染那部分， 我没有写案例。
 
-[ERROR] [2018-05-10 14:12:38] [0] [Test.php|31] [192.168.37.41] [/index.php?c=test&m=manUser&name=&sex=%E7%94%B7&age=51] [] [uuid=eeced9c342ae1a4010c815d253cbf892; Hm_lvt_ff8e5ea3d826cc3ff9e62f38fb25f05b=1506585535,1506585546,1506585753,1506585757; BDTUJIAID=062546b9e6f05ba8dcd03fcd00e8aec9; UM_distinctid=1626732575637-0363efcaa-671d107a-1fa400-16267325757483; iciba_u_rand=f81419f1f1f83a9627fa928b356020cc%40114.251.146.132; iciba_u_rand_t=1523429063; _last_active=a%3A3%3A%7Bs%3A1%3A%22i%22%3Bs%3A8%3A%2214406053%22%3Bi%3A0%3Bi%3A1524725552%3Bs%3A1%3A%22u%22%3Bs%3A12%3A%22my.iciba.com%22%3B%7D] - "name is empty"
 
 
 
