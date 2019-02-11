@@ -113,25 +113,6 @@ class UserinfoModel extends Core_Model {
         return $this->db->query("select * from user_info where nickname like '%$nickname%'");
     }
 
-    function getUserAndAuth($user_id, $token,& $out) {
-        if (empty($user_id)) {
-            $out = array('errno' => 99900031, 'errmsg' => 'user id is empty');
-            return;
-        }
-
-        $userInfo = $this->getUserinfoByUserid($user_id);
-        if (empty($userInfo)) {
-            $out = array('errno' => 99900032, 'errmsg' => 'not find user');
-            return;
-        }
-
-        if (empty($token) || $token != $userInfo['token']) {
-            $out = array('errno' => 99900033, 'errmsg' => 'token is invalid');
-            return;
-        }
-        return $userInfo;
-    }
-
     function getUserInUserids($userids) {
         $ret = array();
 
