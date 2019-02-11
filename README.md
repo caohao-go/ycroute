@@ -111,7 +111,7 @@ class UserController extends Core_Controller {
         $this->util_log = Logger::get_instance('user_log'); //日志
         Loader::helper('common_helper'); //公共函数
 
-        $this->sample = Loader::library('sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
+        $this->sample = Loader::library('Sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }
 
     //获取用户信息接口
@@ -142,10 +142,16 @@ class UserController extends Core_Controller {
 ```
 
 通过 $this->response_error(10000017, 'user_id is empty'); 返回错误结果 <br>
+```json
+{
+    "errno":10000017,
+    "errmsg":"user_id is empty"
+}
+```
 通过 $this->response_success($result);  返回JSON格式成功结果，格式如下： 
 ```json
 {
-    "tagcode":"00000000",
+    "errno":0,
     "union":"",
     "amount":0,
     "session_key":"ZqwsC+Spy4C31ThvqkhOPg==",
@@ -166,10 +172,97 @@ class UserController extends Core_Controller {
 }
 ```
 
-##### 模型层
-所有的Model层位于 superci/application/models目录，
+## 加载器
+通过 Loader 加载器可以加载模型层，公共类库，公共函数，数据库，缓存等对象， Logger 为日志类。
 
-通过 $this->example_model = Loader::model('ExampleModel'); 加载模型
+## 模型层
+framework/application/models/UserinfoModel.php ，模型层，你可以继承自Core_Model， 也可以不用，Core_Model 中封装了许多常用SQL操作。最后一章会介绍各个函数用法。
+
+通过 $this->user_model = Loader::model('UserinfoModel') 加载模型层，模型层与数据库打交道。
+```php
+class UserinfoModel extends Core_Model {
+    public function __construct() {
+        $this->db = Loader::database('default');
+        $this->util_log = Logger::get_instance('userinfo_log');
+    }
+
+    function register_user($appid, $userid, $open_id, $session_key) {
+        $data = array();
+        $data['appid'] = $appid;
+        $data['user_id'] = $userid;
+        $data['open_id'] = $open_id;
+        $data['session_key'] = $session_key;
+        $data['last_login_time'] = $data['regist_time'] = date('Y-m-d H:i:s', time());
+        $data['token'] = md5(TOKEN_GENERATE_KEY . time() . $userid . $session_key);
+        $ret = $this->db->insert("user_info", $data);
+        if ($ret != -1) {
+            return $data['token'];
+        } else {
+            $this->util_log->LogError("error to register_user, DATA=[".json_encode($data)."]");
+            return false;
+        }
+    }
+    
+    ...
+}
+```
+
+## redis 缓存操作
+加载 redis 缓存： Loader::redis('default_master');  参数为framework/application/config/redis.php 配置键值，如下：
+```php
+$redis_conf['default_master']['host'] = '127.0.0.1';
+$redis_conf['default_master']['port'] = 6379;
+$redis_conf['default_slave']['host'] = '127.0.0.1';
+$redis_conf['default_slave']['port'] = 6380;
+
+$redis_conf['userinfo']['host'] = '127.0.0.1';
+$redis_conf['userinfo']['port'] = 6379;
+
+return $redis_conf;
+```
+
+使用例子：
+```php
+$redis = Loader::redis("default_master"); //主写
+$redis->set("pre_redis_user_${userid}", serialize($result));
+$redis->expire("pre_redis_user_${userid}", 3600);
+
+$redis = Loader::redis("default_slave"); //从读
+$data = $redis->get("pre_redis_user_${userid}");
+```
+
+## 数据库操作
+数据库加载：  Loader::database("default");   参数为framework/application/config/redis.php 配置键值，如下：
+```php
+$db['default']['unix_socket'] = '/var/run/mysql_sock/mysql_user_pool.sock';  //unix socket 数据库连接池，使用参考 https://blog.csdn.net/caohao0591/article/details/85255704
+$db['default']['pconnect'] = FALSE;
+$db['default']['db_debug'] = TRUE;
+$db['default']['char_set'] = 'utf8';
+$db['default']['dbcollat'] = 'utf8_general_ci';
+$db['default']['autoinit'] = FALSE;
+
+$db['payinfo_master']['host']     = '127.0.0.1';
+$db['payinfo_master']['username'] = 'root';
+$db['payinfo_master']['password'] = 'test123123';
+$db['payinfo_master']['dbname']   = 'payinfo';
+$db['payinfo_master']['pconnect'] = FALSE;
+$db['payinfo_master']['db_debug'] = TRUE;
+$db['payinfo_master']['char_set'] = 'utf8';
+$db['payinfo_master']['dbcollat'] = 'utf8_general_ci';
+$db['payinfo_master']['autoinit'] = FALSE;
+$db['payinfo_master']['port'] = 3306;
+
+$db['payinfo_slave']['host']     = '192.168.0.7';
+$db['payinfo_slave']['username'] = 'root';
+$db['payinfo_slave']['password'] = 'test123123';
+$db['payinfo_slave']['dbname']   = 'payinfo';
+$db['payinfo_slave']['pconnect'] = FALSE;
+$db['payinfo_slave']['db_debug'] = TRUE;
+$db['payinfo_slave']['char_set'] = 'utf8';
+$db['payinfo_slave']['dbcollat'] = 'utf8_general_ci';
+$db['payinfo_slave']['autoinit'] = FALSE;
+$db['payinfo_slave']['port'] = 3306;
+```
 
 
 
@@ -202,36 +295,6 @@ $this->util_sample = Loader::library('Util_Sample'); 加载的是 superci/applic
 所有的公共类库位于superci/application/helpers目录
 
 通过 Loader::helper('common_helper'); 方法包含进来。
-
-
-
-##### 数据库操作
-
-数据库操作与CI操作一致，如下，具体细节可以参考CI框架，底层引擎采用phalcon，用户可以从下载包中获取被摘取
-
-	$this->db = Loader::database('default', true);  
-  
-	//插入数据库  
-	$data = array();  
-	$data['name'] = $name;  
-	$data['sex'] = $sex;  
-	$data['age'] = $age;  
-	$this->db->insert('customer', $data);  
-	$uid = intval( $this->db->insert_id() );  
-	  
-	//获取多条数据  
-	$where = array();  
-	$where['age >'] = 30;  
-	$data = $this->db->where($where)  
-                 ->order_by('age')  
-                 ->limit(3)  
-                 ->get('customer')  
-                 ->result_array();  
-	  
-	//获取单条数据  
-	$data = $this->db->where('uid', $uid)  
-                 ->get('customer')  
-                 ->row_array();  
 
 
 
