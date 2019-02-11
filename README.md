@@ -44,7 +44,7 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
          |----- plugins       //yaf路由插件目录，路由前后钩子，(接口验签在这里)
          |----- third         //第三方类库
          |----- views         //视图层
-```php
+```
 	 
 ## 路由配置
 framework/conf/application.ini
