@@ -9,11 +9,14 @@
  */
 class UserController extends Core_Controller {
     public function init() {
-        parent::init();
+        parent::init(); //必须
 
-        $this->util_log = Logger::get_instance('user_log');
-        $this->user_model = Loader::model('UserinfoModel');
-        Loader::helper('common_helper');
+        $this->user_model = Loader::model('UserinfoModel'); //模型层
+
+        $this->util_log = Logger::get_instance('user_log'); //日志
+        Loader::helper('common_helper'); //公共函数
+
+        $this->sample = Loader::library('sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }
 
     //获取用户信息接口
@@ -37,16 +40,8 @@ class UserController extends Core_Controller {
         if (empty($token) || $token != $userInfo['token']) {
             $this->response_error(10000024, "token 校验失败");
         }
-
-        $data = array();
-        $data['amount'] = $userInfo['amount'];
-        $data['gender'] = intval($userInfo['gender']);
-        $data['avatarUrl'] = $userInfo['avatar_url'];
-        $data['nickname'] = $userInfo['nickname'];
-        $data['form_id'] = $userInfo['form_id'];
-        $data['userId'] = $userInfo['user_id'];
         
-        $this->response_success($data);
+        $this->response_success($userInfo);
     }
 
 }
