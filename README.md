@@ -429,13 +429,73 @@ userinfo.20190211.log  userinfo.20190211.log.wf
 ```
 
 日志格式: [日志级别] [时间] [错误代码] [文件|行数] [ip] [uri] [referer] [cookie] [统计信息] "内容"
-
+```shell
 [INFO] [2019-02-11 18:57:01] - - [218.30.116.8] - - - [] "register success"<br>
 [ERROR] [2019-02-11 18:57:01] [0] [index.php|23 => | => User.php|35 => Userinfo.php|93] [218.30.116.8] [/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e] [] [] - "not find userinfo"
+```
 
 ## VIEW层
 视图层参考yaf视图渲染那部分， 我没有写案例。
 
+## 附录 - Core_Model 中的辅助极速开发函数（不关心可以跳过）
+$this->redis_conf_path = 'default_master';   //用到快速缓存时，需要在 __construct 构造函数中加上 redis  缓存配置
+```php
+/**
+ * 插入表记录
+ * @param string table 表名
+ * @param array data 表数据
+ * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
+ */
+public function insert_table($table, $data, $redis_key = "");
+/**
+ * 更新表记录
+ * @param string table 表名
+ * @param array where 查询条件
+ * @param array data 更新数据
+ * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
+ */
+public function update_table($table, $where, $data, $redis_key = "");
+/**
+ * 替换表记录
+ * @param string table 表名
+ * @param array data 替换数据
+ * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
+ */
+public function replace_table($table, $data, $redis_key = "");
+/**
+ * 删除表记录
+ * @param string table 表名
+ * @param array where 查询条件
+ * @param string redis_key redis缓存键值, 可空， 非空时清理键值缓存
+ */
+public function delete_table($table, $where, $redis_key = "");
+/**
+ * 获取表数据
+ * @param string table 表名
+ * @param array where 查询条件
+ * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
+ * @param int redis_expire redis 缓存到期时长(秒)
+ * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
+ */
+public function get_table_data($table, $where = array(), $redis_key = "", $redis_expire = 600, $set_empty_flag = true);
+/**
+ * 根据key获取表记录
+ * @param string table 表名
+ * @param string key 键名
+ * @param string value 键值
+ * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
+ * @param int redis_expire redis 缓存到期时长(秒)
+ * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
+ */
+public function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true);
 
-
+/**
+ * 获取一条表数据
+ * @param string table 表名
+ * @param array where 查询条件
+ * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
+ * @param int redis_expire redis 缓存到期时长(秒)
+ * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
+ */
+public function get_one_table_data($table, $where, $redis_key = "", $redis_expire = 600, $set_empty_flag = true);
 
