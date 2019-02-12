@@ -64,16 +64,30 @@ class Loader
         return Yaf_Registry::get($library_name);
     }
     
-    public static function model($library_name, $params = null) {
-        if(!Yaf_Registry::has($library_name)) {
+    public static function model($model_name, $params = null) {
+        if(!Yaf_Registry::has($model_name)) {
             if(empty($params)) {
-                Yaf_Registry::set($library_name, new $library_name());
+                Yaf_Registry::set($model_name, new $model_name());
             } else {
-                Yaf_Registry::set($library_name, new $library_name($params));
+                Yaf_Registry::set($model_name, new $model_name($params));
             }
         }
         
-        return Yaf_Registry::get($library_name);
+        return Yaf_Registry::get($model_name);
+    }
+    
+    public static function dao($dao_name, $params = null) {
+        if(!Yaf_Registry::has($dao_name)) {
+            $file_name = APPPATH . "/application/daos/$dao_name.php";
+            include_once($file_name);
+            if(empty($params)) {
+                Yaf_Registry::set($dao_name, new $dao_name());
+            } else {
+                Yaf_Registry::set($dao_name, new $dao_name($params));
+            }
+        }
+        
+        return Yaf_Registry::get($dao_name);
     }
 
     public static function database($params = '')
