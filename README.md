@@ -2,17 +2,19 @@ SuperCI
 ===
 
 ## 框架介绍
-框架由3层架构构成，Controller、Model、View 层，基于yaf, ycdatabase 扩展(支持稳定、强大的数据库连接池) ，支持PHP7，优点如下： <br>
+框架由3层架构构成，Controller、Model、View 层，支持PHP7，优点如下：
 
-1、框架层次分明、使用简洁（开箱即用）、性能高（yaf、数据库orm都是C语言扩展）、功能强大。
+1、框架层次分明、使用简洁（开箱即用）、功能强大。
 
-2、支持MySQL数据库 ORM 代理，支持Redis代理，简便的主从配置。
+2、基于 yaf 路由和 ycdatabase 框架，两者都是C语言扩展，保证了性能。
 
-3、稳定强大的数据库/redis连接池支持。参考 https://blog.csdn.net/caohao0591/article/details/85255704
+3、ycdatabase 是强大的数据库 ORM 框架，功能强大，安全可靠，支持便捷的主从配置，支持稳定、强大的数据库连接池。参考 https://blog.csdn.net/caohao0591/article/details/85255704
 
-4、强大的日志模块、异常捕获模块。
+4、支持Redis代理，简便的主从配置，稳定的redis连接池支持。https://blog.csdn.net/caohao0591/article/details/85679702
 
-5、基于PHP7，代码缓存opcache。
+5、强大的日志模块、异常捕获模块，便捷高效的类库、共用函数加载模块
+
+6、基于PHP7，代码缓存opcache。
 
 ## 运行环境
 
@@ -44,25 +46,14 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 ```
 	 
 ## 路由配置
-framework/conf/application.ini
+路由配置位于： framework/conf/application.ini<br>
+示例： http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
 
-##### 我们看看路由配置部分
-```php
-routes.regex.type="regex"  
-routes.regex.match="#^/list/([^/]*)/([^/]*)#"  
-routes.regex.route.controller=Index  
-routes.regex.route.action=action  
-routes.regex.map.1=name  
-routes.regex.map.2=value  
-routes.simple.type="simple"  
-routes.simple.controller=c  
-routes.simple.action=m  
-routes.simple.module=o
-```
-
-##### 控制器由参数c决定，动作有 m 决定。比如如下demo Url：
-
-http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
+##### 控制器由参数c决定，动作有 m 决定。
+|参数|方式|描述| 
+|------|---|----|
+|c|GET|控制器，路由到 /application/controller/User.php 文件|
+|m|GET|入口方法， User.php 里面的 getUserInfoAction 方法|
 
 程序将被路由到 framework/application/controllers/User.php文件的 UserController::getUserInfoAction方法，其它路由细节参考Yaf框架
 ```php
@@ -93,6 +84,8 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     {
         //在这里写你的验签逻辑
     }
+    ...
+}
 ```
 
 ## 控制层
