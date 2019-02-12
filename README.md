@@ -322,7 +322,7 @@ echo json_encode($data);exit;
 $data = $this->db->get("user_info", ['regist_time[<]' => '2018-06-30 15:48:39', 
                                     'gender' => 1,
                                     'country' => 'China',
-				                    'city[!]' => null,
+				    'city[!]' => null,
                                     'ORDER' => [
                                         "user_id",
                                         "regist_time" => "DESC",
