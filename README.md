@@ -2,17 +2,19 @@ SuperCI
 ===
 
 ## 框架介绍
-框架由3层架构构成，Controller、Model、View 层，基于yaf, ycdatabase 扩展(支持稳定、强大的数据库连接池) ，支持PHP7，优点如下： <br>
+框架由3层架构构成，Controller、Model、View 层，支持PHP7，优点如下：
 
-1、框架层次分明、使用简洁（开箱即用）、性能高（yaf、数据库orm都是C语言扩展）、功能强大。
+1、框架层次分明、使用简洁（开箱即用）、功能强大。
 
-2、支持MySQL数据库 ORM 代理，支持Redis代理，简便的主从配置。
+2、基于 yaf 路由和 ycdatabase 框架，两者都是C语言扩展，保证了性能。
 
-3、稳定强大的数据库/redis连接池支持。参考 https://blog.csdn.net/caohao0591/article/details/85255704
+3、ycdatabase 是强大的数据库 ORM 框架，功能强大，安全可靠，支持稳定、强大的数据库连接池。参考 https://blog.csdn.net/caohao0591/article/details/85255704
 
-4、强大的日志模块、异常捕获模块。
+4、支持Redis代理，简便的主从配置，稳定的redis连接池支持。https://blog.csdn.net/caohao0591/article/details/85679702
 
-5、基于PHP7，代码缓存opcache。
+5、强大的日志模块、异常捕获模块。
+
+6、基于PHP7，代码缓存opcache。
 
 ## 运行环境
 
