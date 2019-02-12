@@ -48,14 +48,12 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 示例： http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
 
 ##### 控制器由参数c决定，动作有 m 决定。
-程序将被路由到 framework/application/controllers/User.php文件的 UserController::getUserInfoAction方法，其它路由细节参考Yaf框架
-
 |参数|方式|描述| 
 |------|---|----|
 |c|GET|控制器，路由到 /application/controller/User.php 文件|
 |m|GET|入口方法， User.php 里面的 getUserInfoAction 方法|
 
-
+程序将被路由到 framework/application/controllers/User.php文件的 UserController::getUserInfoAction方法，其它路由细节参考Yaf框架
 ```php
 class UserController extends Core_Controller  
 {  
