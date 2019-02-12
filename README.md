@@ -221,8 +221,7 @@ class UserinfoModel extends Core_Model {
 ```php
 $redis_conf['default_master']['host'] = '127.0.0.1';
 $redis_conf['default_master']['port'] = 6379;
-$redis_conf['default_slave']['host'] = '127.0.0.1';
-$redis_conf['default_slave']['port'] = 6380;
+$redis_conf['default_slave']['host'] = '/tmp/redis_pool.sock';  //unix socket 数据库连接池，需要配置openresty-pool/conf/nginx.conf并开启代理，具体参考 https://blog.csdn.net/caohao0591/article/details/85679702
 
 $redis_conf['userinfo']['host'] = '127.0.0.1';
 $redis_conf['userinfo']['port'] = 6379;
@@ -238,6 +237,53 @@ $redis->expire("pre_redis_user_${userid}", 3600);
 
 $redis = Loader::redis("default_slave"); //从读
 $data = $redis->get("pre_redis_user_${userid}");
+```
+
+连接池配置：<br>
+```lua
+worker_processes  1;        #nginx worker 数量
+
+error_log logs/error.log;   #指定错误日志文件路径
+
+events {
+    worker_connections 1024;
+}
+
+stream {
+	lua_code_cache on;
+
+	lua_check_client_abort on;
+
+	server {
+		listen unix:/tmp/redis_pool.sock;
+		content_by_lua_block {
+			local redis_pool = require "redis_pool"
+			pool = redis_pool:new({ip = "127.0.0.1", port = 6380, auth = "password"})
+			pool:run()
+		}
+	}
+	
+	server {
+
+		listen unix:/var/run/mysql_sock/mysql_user_pool.sock;
+		
+		content_by_lua_block {
+			local mysql_pool = require "mysql_pool"
+			
+			local config = {host = "127.0.0.1", 
+							user = "root", 
+							password = "test123123",
+							database = "userinfo", 
+							timeout = 2000, 
+							max_idle_timeout = 10000, 
+							pool_size = 200}
+						   
+			pool = mysql_pool:new(config)
+			
+			pool:run()
+		}
+	}
+}
 ```
 
 ## 数据库操作
