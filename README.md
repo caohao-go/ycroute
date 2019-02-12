@@ -8,7 +8,7 @@ SuperCI
 
 2、基于 yaf 路由和 ycdatabase 框架，两者都是C语言扩展，保证了性能。
 
-3、ycdatabase 是强大的数据库 ORM 框架，功能强大，安全可靠，支持稳定、强大的数据库连接池。参考 https://blog.csdn.net/caohao0591/article/details/85255704
+3、ycdatabase 是强大的数据库 ORM 框架，功能强大，安全可靠，支持稳定、强大的数据库连接池。支持便捷的主从配置，参考 https://blog.csdn.net/caohao0591/article/details/85255704
 
 4、支持Redis代理，简便的主从配置，稳定的redis连接池支持。https://blog.csdn.net/caohao0591/article/details/85679702
 
