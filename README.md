@@ -44,21 +44,12 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 ```
 	 
 ## 路由配置
-framework/conf/application.ini
+路由配置位于： framework/conf/application.ini
 
-##### 我们看看路由配置部分
-```php
-routes.regex.type="regex"  
-routes.regex.match="#^/list/([^/]*)/([^/]*)#"  
-routes.regex.route.controller=Index  
-routes.regex.route.action=action  
-routes.regex.map.1=name  
-routes.regex.map.2=value  
-routes.simple.type="simple"  
-routes.simple.controller=c  
-routes.simple.action=m  
-routes.simple.module=o
-```
+|参数|方式|描述| 
+|------|---|----|
+|c|GET|控制器，路由到 /application/controller/User.php 文件|
+|m|GET||入口方法， User.php 里面的 getUserInfoAction 方法|
 
 ##### 控制器由参数c决定，动作有 m 决定。比如如下demo Url：
 
