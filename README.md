@@ -287,7 +287,7 @@ stream {
 ```
 
 ## 数据库操作
-数据库加载：  Loader::database("default");   参数为framework/application/config/redis.php 配置键值，如下：
+数据库加载：  Loader::database("default");   参数为framework/application/config/database.php 配置，如下：
 ```php
 $db['default']['unix_socket'] = '/var/run/mysql_sock/mysql_user_pool.sock';  //unix socket 数据库连接池，具体使用参考 https://blog.csdn.net/caohao0591/article/details/85255704
 $db['default']['pconnect'] = FALSE;
