@@ -12,7 +12,7 @@ SuperCI
 
 4、支持Redis代理，简便的主从配置，稳定的redis连接池支持。https://blog.csdn.net/caohao0591/article/details/85679702
 
-5、强大的日志模块、异常捕获模块。
+5、强大的日志模块、异常捕获模块，便捷的类库、共用函数加载模块
 
 6、基于PHP7，代码缓存opcache。
 
