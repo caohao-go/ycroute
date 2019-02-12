@@ -10,6 +10,7 @@ SuperCI
 - 控制层
 - 加载器
 - 模型层
+- dao层(可选)
 - Redis缓存操作
 - 数据库操作
 - 配置加载
@@ -20,7 +21,7 @@ SuperCI
 - 附录 - Core_Model 中的辅助极速开发函数
 
 ## 框架介绍
-框架由3层架构构成，Controller、Model、View 层，支持PHP7，优点如下：
+框架由3层架构构成，Controller、Model、View 以及1个可选的Dao层，支持PHP7，优点如下：
 
 1、框架层次分明、使用简洁（开箱即用）、功能强大。
 
@@ -56,6 +57,7 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
          |----- controller    //控制器目录
                 |------ User.php    //User控制器
          |----- core          //框架基类目录
+	 |----- daos          //DAO层目录(可选)
          |----- errors        //错误页目录
          |----- helpers       //公共函数目录
          |----- library       //公共类库目录
@@ -187,7 +189,7 @@ class UserController extends Core_Controller {
 通过 Loader 加载器可以加载模型层，公共类库，公共函数，数据库，缓存等对象， Logger 为日志类。
 
 ## 模型层
-framework/application/models/UserinfoModel.php ，模型层，你可以继承自Core_Model， 也可以不用，Core_Model 中封装了许多常用SQL操作。最后一章会介绍各个函数用法。
+framework/application/models/Userinfo.php ，模型层，你可以继承自Core_Model， 也可以不用，Core_Model 中封装了许多常用SQL操作。最后一章会介绍各个函数用法。
 
 通过 $this->user_model = Loader::model('UserinfoModel') 加载模型层，模型层与数据库打交道。
 ```php
@@ -217,6 +219,13 @@ class UserinfoModel extends Core_Model {
     ...
 }
 ```
+
+## Dao层(可选)
+如果你习惯了4层结构，你可以加载Dao层，作为与数据库交互的层，而model层作为业务层。这个时候Model 最好不要继承 Core_Model，而由Dao层来继承。
+framework/application/daos/UserinfoDao.php ，数据库交互层，你可以继承自Core_Model， 也可以不用，Core_Model 中封装了许多常用SQL操作。最后一章会介绍各个函数用法。
+
+通过 $this->user_dao = Loader::dao('UserinfoDao') 加载dao层，我们建议一个数据库对应一个Dao层。
+
 
 ## redis 缓存操作
 加载 redis 缓存： Loader::redis('default_master');  参数为framework/application/config/redis.php 配置键值，如下：
