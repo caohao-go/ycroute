@@ -317,6 +317,29 @@ echo json_encode($data);exit;
 ]
 ```
 
+#### 查询单列
+```php
+$data = $this->db->get("user_info", ['regist_time[<]' => '2018-06-30 15:48:39', 
+                                    'gender' => 1,
+                                    'country' => 'China',
+				                    'city[!]' => null,
+                                    'ORDER' => [
+                                        "user_id",
+                                        "regist_time" => "DESC",
+                                        "amount" => "ASC"
+                                        ],
+                                    'LIMIT' => 10], "nickname");
+echo json_encode($data);exit;
+```
+```json
+[
+	"芒果",
+	"Smile、格调",
+	"Yang",
+	"凉之渡"
+]
+```
+
 #### 查询单条记录
 ```php
 $data = $this->db->get_one("user_info", ['user_id' => 6818810]);
