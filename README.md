@@ -44,7 +44,7 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 ```
 	 
 ## 路由配置
-路由配置位于： framework/conf/application.ini
+路由配置位于： framework/conf/application.ini<br>
 示例： http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
 
 ##### 控制器由参数c决定，动作有 m 决定。
@@ -82,6 +82,8 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     {
         //在这里写你的验签逻辑
     }
+    ...
+}
 ```
 
 ## 控制层
