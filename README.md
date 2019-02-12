@@ -40,6 +40,8 @@ SuperCI
 
 依赖扩展： yaf 、  ycdatabase 扩展 
 
+创建日志目录：/data/app/logs ，目录权限为 php 项目可写。 
+
 yaf 介绍以及安装： https://github.com/laruence/yaf
 
 ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
