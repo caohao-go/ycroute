@@ -10,7 +10,7 @@ SuperCI
 - 控制层
 - 加载器
 - 模型层
-- dao层(可选)
+- 数据交互dao层(可选)
 - Redis缓存操作
 - 数据库操作
 - 配置加载
@@ -220,9 +220,12 @@ class UserinfoModel extends Core_Model {
 }
 ```
 
-## Dao层(可选)
-如果你习惯了4层结构，你可以加载Dao层，作为与数据库交互的层，而model层作为业务层。这个时候Model 最好不要继承 Core_Model，而由Dao层来继承。
+## 数据交互Dao层(可选)
+如果你习惯了4层结构，你可以加载Dao层，作为与数据库交互的层，而model层作为业务层。这个时候 Model 最好不要继承 Core_Model，而由 Dao 层来继承。
+
+
 framework/application/daos/UserinfoDao.php ，数据库交互层，你可以继承自Core_Model， 也可以不用，Core_Model 中封装了许多常用SQL操作。最后一章会介绍各个函数用法。
+
 
 通过 $this->user_dao = Loader::dao('UserinfoDao') 加载dao层，我们建议一个数据库对应一个Dao层。
 
