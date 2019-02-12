@@ -221,7 +221,7 @@ class UserinfoModel extends Core_Model {
 ```php
 $redis_conf['default_master']['host'] = '127.0.0.1';
 $redis_conf['default_master']['port'] = 6379;
-$redis_conf['default_slave']['host'] = '/tmp/redis_pool.sock';  //unix socket 数据库连接池，需要配置 openresty-pool/conf/nginx.conf，并开启代理，具体参考 https://blog.csdn.net/caohao0591/article/details/85679702
+$redis_conf['default_slave']['host'] = '/tmp/redis_pool.sock';  //unix socket redis连接池，需要配置 openresty-pool/conf/nginx.conf，并开启代理，具体参考 https://blog.csdn.net/caohao0591/article/details/85679702
 
 $redis_conf['userinfo']['host'] = '127.0.0.1';
 $redis_conf['userinfo']['port'] = 6379;
