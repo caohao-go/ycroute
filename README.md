@@ -1,6 +1,24 @@
 SuperCI
 ===
 
+## 目录
+- 框架介绍
+- 运行环境
+- 代码结构
+- 路由配置
+- 过滤验签
+- 控制层
+- 加载器
+- 模型层
+- Redis缓存操作
+- 数据库操作
+- 配置加载
+- 公共类加载
+- 公共函数
+- 日志模块
+- 视图层
+- 附录 - Core_Model 中的辅助极速开发函数
+
 ## 框架介绍
 框架由3层架构构成，Controller、Model、View 层，支持PHP7，优点如下：
 
@@ -47,7 +65,8 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
 	 
 ## 路由配置
 路由配置位于： framework/conf/application.ini<br>
-示例： http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e
+示例： http://localhost/index.php?c=user&m=getUserInfo&userid=6842811&token=c9bea5dee1f49488e2b4b4645ff3717e<br>
+详细参考文档： http://php.net/manual/zh/book.yaf.php
 
 ##### 控制器由参数c决定，动作有 m 决定。
 |参数|方式|描述| 
@@ -295,6 +314,29 @@ echo json_encode($data);exit;
         "user_id":7481824,
         "city":"Guangzhou"
     }
+]
+```
+
+#### 查询单列
+```php
+$data = $this->db->get("user_info", ['regist_time[<]' => '2018-06-30 15:48:39', 
+                                    'gender' => 1,
+                                    'country' => 'China',
+				    'city[!]' => null,
+                                    'ORDER' => [
+                                        "user_id",
+                                        "regist_time" => "DESC",
+                                        "amount" => "ASC"
+                                        ],
+                                    'LIMIT' => 10], "nickname");
+echo json_encode($data);exit;
+```
+```json
+[
+	"芒果",
+	"Smile、格调",
+	"Yang",
+	"凉之渡"
 ]
 ```
 
