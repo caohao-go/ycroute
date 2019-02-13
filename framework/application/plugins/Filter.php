@@ -3,7 +3,7 @@
 /**
  * FilterPlugin Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @subpackage    Plugin
  * @category      Filter Plugin
  * @author        caohao

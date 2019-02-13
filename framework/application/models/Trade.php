@@ -2,7 +2,7 @@
 /**
  * ExampleModel Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @subpackage    Model
  * @category      Example Model
  * @author        caohao

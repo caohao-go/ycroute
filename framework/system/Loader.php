@@ -2,7 +2,7 @@
 /**
  * Loader Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @subpackage    System
  * @category      Loader
  * @author        caohao

@@ -2,7 +2,7 @@
 /**
  * YarClientProxy Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @category      System
  * @author        caohao
  */
@@ -56,7 +56,7 @@ class YarClientProxy
 	public static function concurrent_call($call_params, $model_config) {
 		$yar_client_proxy_log = Logger::get_instance("yar_client_proxy");
 		
-		//注册远程服务调用
+		//register call
 		foreach($call_params as $call_param) {
 			if(empty($call_param['method'])) {
 				$yar_client_proxy_log->LogError("concurrent_call_error method is empty [$model]");
@@ -82,10 +82,10 @@ class YarClientProxy
 			Yar_Concurrent_Client::call($url, $call_param['method'], $call_param['parameters'], $callback, $error_callback, $option);
 		}
 		
-		//发送所有注册的并行调用
+		//send all rpc call 
 		Yar_Concurrent_Client::loop("YarClientProxy::empty_callback", "YarClientProxy::error_empty_callback");
 		
-		//清理所有注册的调用
+		//clean all call register
 		Yar_Concurrent_Client::reset();
 	}
 	
@@ -94,5 +94,4 @@ class YarClientProxy
 	
 	public static function error_empty_callback($type, $error, $callinfo) {
 	}
-	
 }

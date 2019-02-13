@@ -2,7 +2,7 @@
 /**
  * Request Class
  *
- * @package        SuperCI
+ * @package        YCRoute
  * @subpackage    Request
  * @category      Request
  * @author        caohao

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * @package        SuperCI
+ * @package        YCRoute
  * @subpackage    Function
  * @category      Common Function
  * @author        caohao

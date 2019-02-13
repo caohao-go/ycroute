@@ -1,7 +1,7 @@
 <?php
 /**
  * Index
- * @package        SuperCI
+ * @package        YCRoute
  * @subpackage    Index
  * @category      Index
  * @author        caohao

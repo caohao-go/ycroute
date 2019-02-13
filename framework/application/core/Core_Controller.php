@@ -3,7 +3,7 @@
 /**
  * Core_Controller Class
  *
- * @package        SuperCI
+ * @package        YCRoute
  * @subpackage    Controller
  * @category      Controller Base
  * @author        caohao

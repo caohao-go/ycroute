@@ -2,7 +2,7 @@
 /**
  * TestController Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @subpackage    Controller
  * @category      RpcserverController
  * @author        caohao

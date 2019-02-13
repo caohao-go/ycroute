@@ -2,7 +2,7 @@
 /**
  * Exceptions Class
  *
- * @package        SuperCI
+ * @package        YCRoute
  * @subpackage    Exceptions
  * @category      Exceptions Handler
  * @author        caohao

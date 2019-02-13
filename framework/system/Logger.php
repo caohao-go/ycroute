@@ -2,7 +2,7 @@
 /**
  * Logger Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @subpackage    Libraries
  * @category      Logger
  * @author        caohao

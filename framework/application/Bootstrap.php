@@ -2,7 +2,7 @@
 /**
  * Bootstrap Class
  *
- * @package       SuperCI
+ * @package       YCRoute
  * @subpackage    Yaf
  * @category      Bootstrap
  * @author        caohao
