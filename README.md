@@ -592,6 +592,7 @@ public function get_table_data_by_key($table, $key, $value, $redis_key = "", $re
  * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
  */
 public function get_one_table_data($table, $where, $redis_key = "", $redis_expire = 600, $set_empty_flag = true);
+```
 
 ## RPC 框架介绍
 #### 传统web应用弊端
