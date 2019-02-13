@@ -252,7 +252,7 @@ class YCDB_Driver {
 			log_message("error", "[$filename][$line] Query error: [$error_code][$error_no][$error_msg]");  
 			
 			if ($this->db_debug) {
-				$this->display_error(array("Error Number: $error_no", "[$error_code] $error_msg", $sql));
+				$this->display_error(array("Error Number: $error_no", "[$error_code] $error_msg"));
 			}
 		} else {
 			log_message("error", $input_error);  
