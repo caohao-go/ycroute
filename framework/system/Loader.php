@@ -2,8 +2,8 @@
 /**
  * Loader Class
  *
- * @package        SuperCI
- * @subpackage    Libraries
+ * @package       SuperCI
+ * @subpackage    System
  * @category      Loader
  * @author        caohao
  */
@@ -34,14 +34,13 @@ class Loader
     }
     
     public static function helper($helper_name) {
-        
         if (isset(self::$has_helpers[$helper_name])){
             return true;
         }
         
         $path = Yaf_Registry::get("config")->application->helper->directory;
         if (file_exists($path . "/" . $helper_name . ".php")){
-            include_once($path . "/" . $helper_name . ".php");
+           	self::my_include_once($path . "/" . $helper_name . ".php");
             self::$has_helpers[$helper_name] = true;
         } else {
             self::$has_helpers[$helper_name] = false;
@@ -53,7 +52,7 @@ class Loader
     public static function library($library_name, $params = null) {
         if(!Yaf_Registry::has($library_name)) {
             $file_name = APPPATH . "/application/library/" . implode('/', explode('_', $library_name)) . ".php";
-            include_once($file_name);
+            include($file_name);
             if(empty($params)) {
                 Yaf_Registry::set($library_name, new $library_name());
             } else {
@@ -76,10 +75,34 @@ class Loader
         return Yaf_Registry::get($model_name);
     }
     
+    public static function remote_model($model_name) {
+    	$remote_key = "Remote_" . $model_name;
+    	
+        if(!Yaf_Registry::has($remote_key)) {
+        	$model_config = self::config("rpc")[$model_name];
+        	if(empty($model_config['url'])) {
+                $util_log->LogError("Loader::remote_model:  remote_model config not exist");
+                return;
+            }
+            
+    		self::my_include_once(BASEPATH . "/YarClientProxy.php");
+        	
+            Yaf_Registry::set($remote_key, new YarClientProxy($model_name, $model_config));
+        }
+        
+        return Yaf_Registry::get($remote_key);
+    }
+    
+    public static function concurrent_call($call_params) {
+    	self::my_include_once(BASEPATH . "/YarClientProxy.php");
+    	$model_config = self::config("rpc");
+    	YarClientProxy::concurrent_call($call_params, $model_config);
+    }
+    
     public static function dao($dao_name, $params = null) {
         if(!Yaf_Registry::has($dao_name)) {
             $file_name = APPPATH . "/application/daos/$dao_name.php";
-            include_once($file_name);
+            include($file_name);
             if(empty($params)) {
                 Yaf_Registry::set($dao_name, new $dao_name());
             } else {
@@ -94,7 +117,7 @@ class Loader
     {
         global $YCDB;
 
-        require_once(BASEPATH.'/ycdb/DBLoader.php');
+        self::my_include_once(BASEPATH.'/ycdb/DBLoader.php');
         
         if(!isset($YCDB[$params]))
         {
@@ -137,5 +160,13 @@ class Loader
             }
         }
         return self::$redis[$redis_name];
+    }
+    
+    public static function my_include_once($path) {
+    	$key = "included_" . md5($path);
+    	if(!Yaf_Registry::has($key)) {
+			include($path);
+			Yaf_Registry::set($key, 1);
+		}
     }
 }

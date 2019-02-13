@@ -2,7 +2,7 @@
 /**
  * Logger Class
  *
- * @package        SuperCI
+ * @package       SuperCI
  * @subpackage    Libraries
  * @category      Logger
  * @author        caohao

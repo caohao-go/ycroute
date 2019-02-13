@@ -2,9 +2,9 @@
 /**
  * ExampleModel Class
  *
- * @package        SuperCI
- * @subpackage    Model
- * @category      Example Model
+ * @package       SuperCI
+ * @subpackage    Core
+ * @category      Core_Model
  * @author        caohao
  */
 class Core_Model {
@@ -20,7 +20,7 @@ class Core_Model {
      * 根据key获取表记录
      * @param string redis_key redis 缓存键值
      */
-    private function get_redis($redis_key) {
+    protected function get_redis($redis_key) {
         if (empty($redis_key)) return;
 
         $redis = Loader::redis($this->redis_conf_path);
@@ -36,7 +36,7 @@ class Core_Model {
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否缓存空值，如果缓存空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    private function set_redis($redis_key, $data, $redis_expire, $set_empty_flag) {
+    protected function set_redis($redis_key, $data, $redis_expire, $set_empty_flag) {
         if (empty($redis_key)) return;
 
         $redis = Loader::redis($this->redis_conf_path);
@@ -54,7 +54,7 @@ class Core_Model {
      * 清理记录缓存
      * @param string redis_key redis 缓存键值
      */
-    public function clear_redis_cache($redis_key = "") {
+    protected function clear_redis_cache($redis_key = "") {
         if (empty($redis_key)) {
             return;
         }
@@ -71,7 +71,7 @@ class Core_Model {
      * @param array data 表数据
      * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
      */
-    public function insert_table($table, $data, $redis_key = "") {
+    protected function insert_table($table, $data, $redis_key = "") {
         $ret = $this->db->insert($table, $data);
 
         if (!empty($redis_key)) {
@@ -93,7 +93,7 @@ class Core_Model {
      * @param array data 更新数据
      * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
      */
-    public function update_table($table, $where, $data, $redis_key = "") {
+    protected function update_table($table, $where, $data, $redis_key = "") {
         if (empty($where)) return;
         $ret = $this->db->update($table, $where, $data);
 
@@ -115,7 +115,7 @@ class Core_Model {
      * @param array data 替换数据
      * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
      */
-    public function replace_table($table, $data, $redis_key = "") {
+    protected function replace_table($table, $data, $redis_key = "") {
         $ret = $this->db->replace($table, $data);
 
         if (!empty($redis_key)) {
@@ -136,7 +136,7 @@ class Core_Model {
      * @param array where 查询条件
      * @param string redis_key redis缓存键值, 可空， 非空时清理键值缓存
      */
-    public function delete_table($table, $where, $redis_key = "") {
+    protected function delete_table($table, $where, $redis_key = "") {
         if (empty($where)) return;
         $ret = $this->db->delete($table, $where);
 
@@ -161,7 +161,7 @@ class Core_Model {
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    public function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true) {
+    protected function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
             if ($data == self::EMPTY_STRING) {
@@ -187,7 +187,7 @@ class Core_Model {
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    public function get_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
+    protected function get_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
             if ($data == self::EMPTY_STRING) {
@@ -213,7 +213,7 @@ class Core_Model {
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    public function get_one_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
+    protected function get_one_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
             if ($data == self::EMPTY_STRING) {

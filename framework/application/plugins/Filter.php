@@ -3,7 +3,7 @@
 /**
  * FilterPlugin Class
  *
- * @package        SuperCI
+ * @package       SuperCI
  * @subpackage    Plugin
  * @category      Filter Plugin
  * @author        caohao
@@ -17,15 +17,18 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
         $this->params = & $request->getParams();
 
         $this->_auth();
+        
+        if(!empty($this->params['rpc'])) {
+        	$this->_rpc_auth(); //rpc 调用校验
+    	}
     }
     
     //路由结束之后
     public function dispatchLoopStartup ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response ) {
         $path = Yaf_Registry::get("config")->application->appconf->directory;
-        require_once($path . "/constants.php");
-        
-        require_once(APPPATH . "/application/core/Core_Controller.php");
-        require_once(APPPATH . "/application/core/Core_Model.php");
+        require($path . "/constants.php");
+        require(APPPATH . "/application/core/Core_Controller.php");
+        require(APPPATH . "/application/core/Core_Model.php");
     }
 
     //分发循环结束之后触发
@@ -39,6 +42,32 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
         //在这里写你的验签逻辑
     }
     
+    //rpc调用校验
+    protected function _rpc_auth()
+    {
+       	$signature = $this->get_rpc_signature($this->params);
+       	if($signature != $this->params['signature']) {
+       		$this->response_error(1, 'check failed');
+       	}
+    }
+    
+    //rpc签名计算
+    public function get_rpc_signature($params) 
+    {
+    	$secret = 'MJCISDYFYHHNKBCOVIUHFUIHCQWE';
+    	unset($params['signature']);
+    	ksort($params);
+		reset($params);
+		unset($auth_params['callback']);
+		unset($auth_params['_']);
+		$str = $secret;
+		foreach ($params as $value) {
+			$str = $str . trim($value);
+		}
+			
+		return md5($str);
+    }
+    
     /**
      * 返回错误code以及错误信息
      * @param sting $message   返回错误的提示信息
@@ -46,7 +75,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
      */
     private function response_error($code, $message)
     {
-        $data = array("tagcode" => intval($code), "description" => $message);
+        $data = array("errno" => intval($code), "errmsg" => $message);
         if(empty($_REQUEST['callback'])) {
             header('Content-Type: application/json');
             echo json_encode($data);

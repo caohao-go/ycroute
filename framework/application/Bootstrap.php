@@ -2,8 +2,8 @@
 /**
  * Bootstrap Class
  *
- * @package        SuperCI
- * @subpackage    Bootstrap
+ * @package       SuperCI
+ * @subpackage    Yaf
  * @category      Bootstrap
  * @author        caohao
  */
@@ -19,9 +19,9 @@ class Bootstrap  extends Yaf_Bootstrap_Abstract {
     }
     
     public function _initCommon(Yaf_Dispatcher $dispatcher) { //注册插件
-        require_once(BASEPATH . "/Request.php");
-        require_once(BASEPATH . "/Logger.php");
-        require_once(BASEPATH . "/Loader.php");
+        require(BASEPATH . "/Request.php");
+        require(BASEPATH . "/Logger.php");
+        require(BASEPATH . "/Loader.php");
     }
     
     public function _initRequest(Yaf_Dispatcher $dispatcher) { //初始化请求
@@ -33,7 +33,7 @@ class Bootstrap  extends Yaf_Bootstrap_Abstract {
     }
 
     public function _initException() { //设置异常回调
-        include_once(BASEPATH . "/Common.php");
+        include(BASEPATH . "/Common.php");
         set_error_handler('_exception_handler');
     }
 

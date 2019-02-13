@@ -2,7 +2,7 @@
 /**
  * YCDB_Driver class
  *
- * @package        SuperCI
+ * @package       SuperCI
  * @subpackage    database
  * @category      YCDB_Driver
  * @author        caohao
