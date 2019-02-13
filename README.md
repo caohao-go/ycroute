@@ -626,7 +626,7 @@ public function get_one_table_data($table, $where, $redis_key = "", $redis_expir
 
 ## RPC Server
 #### 安装环境 (客户端服务端都需要安装)
-扩展： yar.so 
+扩展： yar.so <br>
 扩展： msgpack.so 可选，一个高效的二进制打包协议，用于客户端和服务端之间包传输，还可以选php、json, 如果要使用Msgpack做为打包协议, 就需要安装这个扩展。
 
 
