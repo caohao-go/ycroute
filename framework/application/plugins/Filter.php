@@ -51,7 +51,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
        	}
     }
     
-    //rpc签名计算
+    //rpc签名计算，不要改函数名，在RPC客户端中 system/YarClientProxy.php 我们也会用到这个函数，做签名。
     public function get_rpc_signature($params) 
     {
     	$secret = 'MJCISDYFYHHNKBCOVIUHFUIHCQWE';
