@@ -305,7 +305,7 @@ stream {
 ```
 
 ## 数据库操作
-数据库加载：  Loader::database("default");   参数为framework/application/config/database.php 配置，如下：
+数据库加载：  Loader::database("default");   参数为 framework/application/config/database.php 里配置键值，如下：
 ```php
 $db['default']['unix_socket'] = '/var/run/mysql_sock/mysql_user_pool.sock';  //unix socket 数据库连接池，具体使用参考 https://blog.csdn.net/caohao0591/article/details/85255704
 $db['default']['pconnect'] = FALSE;
@@ -645,7 +645,7 @@ class RpcserverController extends Core_Controller {
 		exit;
     }
 	
-	//支付服务
+    //支付服务
     public function tradeModelAction() {
     	$trade_model = Loader::model('TradeModel'); //模型层
         $yar_server = new Yar_server($trade_model);
@@ -655,6 +655,111 @@ class RpcserverController extends Core_Controller {
 }
 ```
 
-我们通过 url : http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel 来查看 UserinfoModel 一共有哪些服务：
+我们通过 url : http://localhost/index.php?c=rpcserver&m=userinfoModel 来查看 UserinfoModel 一共有哪些服务：
+
  ![Image](https://raw.githubusercontent.com/caohao-php/ycroute/master/image/yar_server.png)
+ 
+上图表示，UserinfoModel 类的所有 public 方法都会被当做服务提供，包括他继承的父类 public 方法，上面 RpcserverController 还提供了一个 TradeModel 的服务，可以通过 http://localhost/index.php?c=rpcserver&m=tradeModel 来访问。
+
+#### 服务校验
+为了安全，我们最好对 RPC 请求服务做校验。在 framework/application/plugins/Filter.php 中做校验：
+```php
+class FilterPlugin extends Yaf_Plugin_Abstract {
+    var $params;
+
+    //路由之前调用
+    public function routerStartUp ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response) {
+        $this->params = & $request->getParams();
+
+        $this->_auth();
+        
+        if(!empty($this->params['rpc'])) {
+        	$this->_rpc_auth(); //rpc 调用校验
+    	}
+    }
+    
+    //rpc调用校验
+    protected function _rpc_auth()
+    {
+       	$signature = $this->get_rpc_signature($this->params);
+       	if($signature != $this->params['signature']) {
+       		$this->response_error(1, 'check failed');
+       	}
+    }
+    
+    //rpc签名计算，不要改函数名，在RPC客户端中 system/YarClientProxy.php 我们也会用到这个函数，做签名。
+    public function get_rpc_signature($params) 
+    {
+    	$secret = 'MJCISDYFYHHNKBCOVIUHFUIHCQWE';
+    	unset($params['signature']);
+    	ksort($params);
+	reset($params);
+	unset($auth_params['callback']);
+	unset($auth_params['_']);
+	$str = $secret;
+	foreach ($params as $value) {
+		$str = $str . trim($value);
+	}
+			
+	return md5($str);
+    }
+    
+    ...
+    
+}
+```
+
+切记不要修改签名生成函数 get_rpc_signature 的名字和参数，因为在 RPC Client 我们也会利用这个函数做签名，如果需要修改，请在 system/YarClientProxy.php 中做响应修改，以保证客户端和服务器之间的调用正常。
+
+
+## RPC Client
+#### 安装环境
+扩展： yar.so <br>
+扩展： msgpack.so 可选，一个高效的二进制打包协议，用于客户端和服务端之间包传输，还可以选php、json, 如果要使用Msgpack做为打包协议, 就需要安装这个扩展。
+
+#### 调用逻辑
+调用例子：
+```php
+class UserController extends Core_Controller {
+
+    ...
+    
+    //获取用户信息(从远程)
+    public function getUserInfoByRemoteAction() {
+        $userId = $this->params['userid'];
+        $token = $this->params['token'];
+        
+        if (empty($userId)) {
+            $this->response_error(10000017, "user_id is empty");
+        }
+
+        if (empty($token)) {
+            $this->response_error(10000016, "token is empty");
+        }
+    	
+    	$model = Loader::remote_model('UserinfoModel');
+    	$userInfo = $model->getUserinfoByUserid($userId);
+    	$this->response_success($userInfo);
+    }
+    
+    ...
+}
+```
+
+通过 $model = Loader::remote_model('UserinfoModel'); 可以获取远程 UserinfoModel ， 参数是 framework/application/rpc.php 配置里的键值：
+```php
+$remote_config['UserinfoModel']['url'] = "http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true";
+$remote_config['UserinfoModel']['packager'] = FALSE;         //RPC包类型，FALSE则选择默认，可以为 "json", "msgpack", "php",  msgpack 需要安装扩展
+$remote_config['UserinfoModel']['persitent'] = FALSE;        //是否长链接，需要服务端支持keepalive
+$remote_config['UserinfoModel']['connect_timeout'] = 1000;   //连接超时(毫秒)，默认 1秒 
+$remote_config['UserinfoModel']['timeout'] = 5000;           //调用超时(毫秒)， 默认 5 秒
+$remote_config['UserinfoModel']['debug'] = TRUE;             //DEBUG模式，调用异常是否会打印到屏幕，线上关闭
+
+$remote_config['TradeModel']['url'] = "http://tr.gaoqu.site/index.php?c=rpcserver&m=tradeModel&rpc=true";
+$remote_config['TradeModel']['packager'] = FALSE;
+$remote_config['TradeModel']['persitent'] = FALSE;
+$remote_config['TradeModel']['connect_timeout'] = 1000; 
+$remote_config['TradeModel']['timeout'] = 5000;       
+$remote_config['TradeModel']['debug'] = TRUE;            
+```
 
