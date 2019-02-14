@@ -47,16 +47,11 @@ class UserController extends Core_Controller {
     //获取用户信息(从远程)
     public function getUserInfoByRemoteAction() {
         $userId = $this->params['userid'];
-        $token = $this->params['token'];
         
         if (empty($userId)) {
             $this->response_error(10000017, "user_id is empty");
         }
 
-        if (empty($token)) {
-            $this->response_error(10000016, "token is empty");
-        }
-    	
     	$model = Loader::remote_model('UserinfoModel');
     	$userInfo = $model->getUserinfoByUserid($userId);
     	$this->response_success($userInfo);
