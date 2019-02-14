@@ -655,14 +655,14 @@ class RpcserverController extends Core_Controller {
 }
 ```
 
-我们通过 url : http://localhost/index.php?c=rpcserver&m=userinfoModel 来查看 UserinfoModel 一共有哪些服务：
+上面一共提供了2个服务，UserinfoModel 和 TradeModel 分别通过http://localhost/index.php?c=rpcserver&m=userinfoModel 和 http://localhost/index.php?c=rpcserver&m=tradeModel 来访问，我们来看看 UserinfoModel 一共有哪些服务：
 
  ![Image](https://raw.githubusercontent.com/caohao-php/ycroute/master/image/yar_server.png)
  
-上图表示，UserinfoModel 类的所有 public 方法都会被当做服务提供，包括他继承的父类 public 方法，上面 RpcserverController 还提供了一个 TradeModel 的服务，可以通过 http://localhost/index.php?c=rpcserver&m=tradeModel 来访问。
+从上图可以看到，UserinfoModel 类的所有 public 方法都会被当做服务提供，包括他继承的父类 public 方法。
 
 #### 服务校验
-为了安全，我们最好对 RPC 请求服务做校验。在 framework/application/plugins/Filter.php 中做校验：
+为了安全，我们最好对客户端发起的RPC服务请求做校验。在 framework/application/plugins/Filter.php 中做校验：
 ```php
 class FilterPlugin extends Yaf_Plugin_Abstract {
     var $params;
