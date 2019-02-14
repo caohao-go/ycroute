@@ -709,7 +709,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
 }
 ```
 
-切记不要修改签名生成函数 get_rpc_signature 的名字和参数，因为在 RPC Client 我们也会利用这个函数做签名，如果需要修改，请在 system/YarClientProxy.php 中做响应修改，以保证客户端和服务器之间的调用正常。
+切记不要修改签名生成函数 get_rpc_signature 的名字和参数，因为在 RPC Client 我们也会利用这个函数做签名，如果需要修改，请在 system/YarClientProxy.php 中做相应修改，以保证客户端和服务器之间的调用正常。
 
 
 ## RPC Client
@@ -746,16 +746,16 @@ class UserController extends Core_Controller {
 }
 ```
 
-通过 $model = Loader::remote_model('UserinfoModel'); 可以获取远程 UserinfoModel ， 参数是 framework/application/rpc.php 配置里的键值：
+通过 $model = Loader::remote_model('UserinfoModel'); 可以获取远程 UserinfoModel，参数是framework/application/config/rpc.php配置里的键值：
 ```php
-$remote_config['UserinfoModel']['url'] = "http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true";
-$remote_config['UserinfoModel']['packager'] = FALSE;         //RPC包类型，FALSE则选择默认，可以为 "json", "msgpack", "php",  msgpack 需要安装扩展
+$remote_config['UserinfoModel']['url'] = "http://localhost/index.php?c=rpcserver&m=userinfoModel&rpc=true";  //服务地址
+$remote_config['UserinfoModel']['packager'] = FALSE;         //RPC包类型，FALSE则选择默认，可以为 "json", "msgpack", "php", msgpack 需要安装扩展
 $remote_config['UserinfoModel']['persitent'] = FALSE;        //是否长链接，需要服务端支持keepalive
 $remote_config['UserinfoModel']['connect_timeout'] = 1000;   //连接超时(毫秒)，默认 1秒 
 $remote_config['UserinfoModel']['timeout'] = 5000;           //调用超时(毫秒)， 默认 5 秒
 $remote_config['UserinfoModel']['debug'] = TRUE;             //DEBUG模式，调用异常是否会打印到屏幕，线上关闭
 
-$remote_config['TradeModel']['url'] = "http://tr.gaoqu.site/index.php?c=rpcserver&m=tradeModel&rpc=true";
+$remote_config['TradeModel']['url'] = "http://localhost/index.php?c=rpcserver&m=tradeModel&rpc=true";
 $remote_config['TradeModel']['packager'] = FALSE;
 $remote_config['TradeModel']['persitent'] = FALSE;
 $remote_config['TradeModel']['connect_timeout'] = 1000; 
@@ -763,3 +763,163 @@ $remote_config['TradeModel']['timeout'] = 5000;
 $remote_config['TradeModel']['debug'] = TRUE;            
 ```
 
+这样，我们就可以把 model 当成本地对象一样调用远程 UserinfoModel 的成员方法。
+
+#### url签名
+调用远程服务的时候，system/YarClientProxy.php 会从配置中获取服务的 url， 然后调用 FilterPlugin::get_rpc_signature 方法对 URL 做签名，并将签名参数拼接到 url 结尾，发起调用。
+```php
+class YarClientProxy {
+	
+	...
+	
+	public static function get_signatured_url($url) {
+		$get = array();
+		$t = parse_url($url, PHP_URL_QUERY);
+		parse_str($t, $get);
+		$get['timestamp'] = time();
+		$get['auth'] = rand(11111111, 9999999999);
+		$signature = FilterPlugin::get_rpc_signature($get);
+		return $url . "&timestamp=" . $get['timestamp'] . "&auth=" . $get['auth'] . "&signature=" . $signature;
+	}
+	
+	...
+}
+```
+
+#### 调用异常日志
+日志位于 /data/app/logs/localhost 下，localhost 为项目域名。
+```bash
+[root@gzapi: /data/app/logs/localhost]# ls
+yar_client_proxy.20190214.log.wf
+```
+[ERROR] [2019-02-14 18:57:13] [0] [index.php|23 => | => User.php|61 => YarClientProxy.php|46] [218.30.116.3] [/index.php?c=user&m=getUserInfoByRemote&userid=6818810&token=c9bea5dee1f49488e2b4b4645ff3717e1] [] [] - "yar_client_call_error URL=[http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true] , Remote_model=[UserinfoModel] Func=[getUserinfoByUserid] Exception=[server responsed non-200 code '500']"
+
+## RPC 并发调用
+yar框架支持并发调用，可以同时调用多个服务，按照yar的流程，你首先得一个个注册服务，然后发送注册的调用，然后reset 重置调用。在ycroute 中，一个函数就可以了。
+
+用 Loader::concurrent_call($call_params); 来并行调用RPC服务， 其中 call_params是调用参数数组。<br>
+如下数组包含4个元素，每个调用都包含 model, method 两个必输参数，以及 parameters, callback , error_callback 三个可选参数。
+- model : 服务名，是framework/application/config/rpc.php配置里的键值。
+- method : 调用函数
+- parameters : 函数的参数，是一个数组，数组的个数为参数的个数
+- callback : 回调函数，调用成功之后回调，针对的是各自的回调。
+- error_callback : 调用失败之后会回调这个函数，其中调用超时不会回调该方法， 针对的也是各自的回调。
+
+```php 
+class UserController extends Core_Controller {
+    //获取用户信息(并行远程调用)
+    public function multipleGetUsersInfoByRemoteAction() {
+    	$userId = $this->params['userid'];
+    	
+    	$call_params = array();
+    	$call_params[] = ['model' => 'UserinfoModel', 
+                          'method' => 'getUserinfoByUserid', 
+                          'parameters' => array($userId), 
+                          "callback" => array($this, 'callback1')];
+    					  
+    	$call_params[] = ['model' => 'UserinfoModel', 
+                          'method' => 'getUserInUserids', 
+                          'parameters' => array(array(6860814, 6870818)), 
+                          "callback" => array($this, 'callback2'),
+                          "error_callback" => array($this, 'error_callback')];
+    					  
+    	$call_params[] = ['model' => 'UserinfoModel', 
+                          'method' => 'getUserByName', 
+                          'parameters' => array('CH.smallhow')];
+			  
+    	//不存在的方法
+    	$call_params[] = ['model' => 'UserinfoModel', 
+                          'method' => 'unknownMethod', 
+                          'parameters' => array(),
+                          "error_callback" => array($this, 'error_callback')];
+                          
+    	Loader::concurrent_call($call_params);
+    	echo json_encode($this->retval);
+    	exit;
+    }
+    
+    //回调函数1
+    public function callback1($retval, $callinfo) {
+    	$this->retval['callback1']['retval'] = $retval;
+    	$this->retval['callback1']['callinfo'] = $callinfo;
+    }
+    
+    //回调函数2
+    public function callback2($retval, $callinfo) {
+    	$this->retval['callback2']['retval'] = $retval;
+    	$this->retval['callback2']['callinfo'] = $callinfo;
+    }
+    
+    //错误回调
+    public function error_callback($type, $error, $callinfo) {
+    	$tmp['type'] = $type;
+    	$tmp['error'] = $error;
+    	$tmp['callinfo'] = $callinfo;
+    	$this->retval['error_callback'][] = $tmp;
+    }
+}
+```
+
+我特意将第4个调用的method设置一个不存在的函数，大家可以看下上面的并行调用的结果：
+```json
+{
+    "error_callback":[
+        {
+            "type":4,
+            "error":"call to undefined api ::unknownMethod()",
+            "callinfo":{
+                "sequence":4,
+                "uri":"http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true×tamp=1550142590&auth=5930400101&signature=fc0ed911c624d9176523544421a0248d",
+                "method":"unknownMethod"
+            }
+        }
+    ],
+    "callback1":{
+        "retval":{
+            "user_id":"6818810",
+            "appid":"wx385863ba15f573b6",
+            "open_id":"oXtwn4wkPO4FhHmkan097DpFobvA",
+            "union":null,
+            "session_key":"Et1yjxbEfRqVmCVsYf5qzA==",
+            "nickname":"芒果",
+            "city":"Yichun",
+            "province":"Jiangxi",
+            "country":"China",
+            "avatar_url":"https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epqg7FwyBUGd5xMXxLQXgW2TDEBhnNjPVla8GmKiccP0pFiaLK1BGpAJDMiaoyGHR9Nib2icIX9Na4Or0g/132",
+            "gender":"1",
+            "form_id":"",
+            "token":"5a350bc05bbbd9556f719a0b8cf2a5ed",
+            "amount":"0",
+            "last_login_time":"2018-10-04 16:01:27",
+            "regist_time":"2018-06-29 21:24:45",
+            "updatetime":"2018-10-04 16:01:27"
+        },
+        "callinfo":{
+            "sequence":1,
+            "uri":"http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true×tamp=1550142590&auth=8384256613&signature=c0f9c944ae070d2eb38c8e9638723a2e",
+            "method":"getUserinfoByUserid"
+        }
+    },
+    "callback2":{
+        "retval":{
+            "6860814":{
+                "user_id":"6860814",
+                "nickname":"Smile、格调",
+                "avatar_url":"https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKNE5mFLk33q690Xl1N6mrehQr0ggasgk8Y4cuaUJt4CNHORwq8rVjwET7H06F3aDjU5UiczjpD4nw/132",
+                "city":"Guangzhou"
+            },
+            "6870818":{
+                "user_id":"6870818",
+                "nickname":"Yang",
+                "avatar_url":"https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLTKBoU1tdRicImnUHyr43FdMulSHRhAlsQwuYgAyOlrwQaLGRoFEHbgfVuyEV1K1VU2NMmm0slS4w/132",
+                "city":"Hengyang"
+            }
+        },
+        "callinfo":{
+            "sequence":2,
+            "uri":"http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true×tamp=1550142590&auth=7249482640&signature=26c419450bb4747ac166fbaa4a242b77",
+            "method":"getUserInUserids"
+        }
+    }
+}
+```
