@@ -14,6 +14,11 @@ class UserinfoModel extends Core_Model {
         $this->util_log = Logger::get_instance('userinfo_log');
     }
 	
+    /**
+     * 根据user_id 获取用户信息
+     * @params $user_id - 用户id
+     * @return array 用户信息
+     */
 	public function getUserinfoByUserid($user_id) {
         $redis_key = "pre_redis_user_info_" . $user_id;
         $redis = Loader::redis("userinfo");
@@ -34,11 +39,21 @@ class UserinfoModel extends Core_Model {
 
         return $userInfo;
     }
-
+	
+    /**
+     * 根据昵称获取用户信息
+     * @params $nickname - 用户昵称
+     * @return array 用户信息
+     */
     public function getUserByName($nickname) {
         return $this->db->query("select * from user_info where nickname like '%$nickname%'");
     }
-
+	
+    /**
+     * 根据昵称批量获取用户信息
+     * @params $userids - array 批量用户id
+     * @return array 用户信息
+     */
     function getUserInUserids($userids) {
         $ret = array();
 
@@ -56,6 +71,11 @@ class UserinfoModel extends Core_Model {
         return $ret;
     }
     
+    /**
+     * 注册用户
+     * @params 
+     * @return $token
+     */
     function registerUser($appid, $userid, $open_id, $session_key) {
         $data = array();
         $data['appid'] = $appid;
@@ -72,7 +92,12 @@ class UserinfoModel extends Core_Model {
             return false;
         }
     }
-
+    
+    /**
+     * 用户登录
+     * @params 
+     * @return $token
+     */
     function loginUser($userid, $session_key) {
         $data = array();
         $data['user_id'] = $userid;
@@ -89,7 +114,12 @@ class UserinfoModel extends Core_Model {
             return false;
         }
     }
-
+	
+    /**
+     * 更新用户
+     * @params  $userid - 用户id, $update_data - 更新信息
+     * @return $token
+     */
     function updateUser($userid, $update_data) {
         $redis = Loader::redis("userinfo");
         $redis->del("pre_redis_user_info_" . $userid);
