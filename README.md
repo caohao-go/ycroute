@@ -21,7 +21,7 @@ SuperCI
 - RPC 介绍 - 像调用本地函数一样调用远程函数
 - RPC Server
 - RPC Client
-- RPC 并发调用
+- RPC 并行调用
 - 附录 - Core_Model 中的辅助极速开发函数
 
 ## 框架介绍
@@ -731,8 +731,8 @@ yar_client_proxy.20190214.log.wf
 ```
 [ERROR] [2019-02-14 18:57:13] [0] [index.php|23 => | => User.php|61 => YarClientProxy.php|46] [218.30.116.3] [/index.php?c=user&m=getUserInfoByRemote&userid=6818810&token=c9bea5dee1f49488e2b4b4645ff3717e1] [] [] - "yar_client_call_error URL=[http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true] , Remote_model=[UserinfoModel] Func=[getUserinfoByUserid] Exception=[server responsed non-200 code '500']"
 
-## RPC 并发调用
-yar框架支持并发调用，可以同时调用多个服务，这样可以充分利用CPU性能，避免IO等待，提升系统性能，按照yar的流程，你首先得一个个注册服务，然后发送注册的调用，然后reset 重置调用。在ycroute 中，一个函数就可以了。
+## RPC 并行调用
+yar框架支持并行调用，可以同时调用多个服务，这样可以充分利用CPU性能，避免IO等待，提升系统性能，按照yar的流程，你首先得一个个注册服务，然后发送注册的调用，然后reset 重置调用。在ycroute 中，一个函数就可以了。
 
 用 Loader::concurrent_call($call_params); 来并行调用RPC服务， 其中 call_params是调用参数数组。<br>
 如下数组包含4个元素，每个调用都包含 model, method 两个必输参数，以及 parameters, callback , error_callback 三个可选参数。
