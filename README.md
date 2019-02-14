@@ -718,7 +718,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
 扩展： msgpack.so 可选，一个高效的二进制打包协议，用于客户端和服务端之间包传输，还可以选php、json, 如果要使用Msgpack做为打包协议, 就需要安装这个扩展。
 
 #### 调用逻辑
-调用例子：
+例子：
 ```php
 class UserController extends Core_Controller {
 
