@@ -12,14 +12,14 @@
 |	['debug'] TRUE/FALSE - Whether rpc call errors should be displayed.
 */
 
-$remote_config['UserinfoModel']['url'] = "http://tr.gaoqu.site/index.php?c=rpcserver&m=userinfoModel&rpc=true";
+$remote_config['UserinfoModel']['url'] = "http://localhost/index.php?c=rpcserver&m=userinfoModel&rpc=true";
 $remote_config['UserinfoModel']['packager'] = FALSE;         //RPC包类型，FALSE则选择默认，可以为 "json", "msgpack", "php",  msgpack 需要安装扩展
 $remote_config['UserinfoModel']['persitent'] = FALSE;        //是否长链接，需要服务端支持keepalive
 $remote_config['UserinfoModel']['connect_timeout'] = 1000;   //连接超时(毫秒)，默认 1秒 
 $remote_config['UserinfoModel']['timeout'] = 5000;           //调用超时(毫秒)， 默认 5 秒
 $remote_config['UserinfoModel']['debug'] = TRUE;             //DEBUG模式，调用异常是否会打印到屏幕，线上关闭
 
-$remote_config['TradeModel']['url'] = "http://tr.gaoqu.site/index.php?c=rpcserver&m=tradeModel&rpc=true";
+$remote_config['TradeModel']['url'] = "http://localhost/index.php?c=rpcserver&m=tradeModel&rpc=true";
 $remote_config['TradeModel']['packager'] = FALSE;      
 $remote_config['TradeModel']['persitent'] = FALSE;       
 $remote_config['TradeModel']['connect_timeout'] = 1000;   
