@@ -559,7 +559,7 @@ userinfo.20190211.log  userinfo.20190211.log.wf
 我们可以看到整个微服务的思想就如我们现在面对信息爆炸、知识爆炸是一样的：通过解耦我们所做的事情，分而治之以减少不必要的损耗，使得整个复杂的系统和组织能够快速的应对变化。
 
 #### 微服务的基石---RPC服务框架
-微服务包含的东西非常多，这里我们只讨论RPC服务框架，ycroute框架基于Yar扩展为我们提供了RPC跨网络的服务调用基础，Yar是一个非常轻量级的RPC框架, 使用非常简单, 对于Server端和Soap使用方法很像，而对于客户端，你可以像调用本地对象的函数一样，调用远程的函数。
+微服务包含的东西非常多，这里我们只讨论RPC服务框架，ycroute框架基于Yar扩展为我们提供了RPC跨网络的服务调用基础，Yar是一个非常轻量级的RPC框架, 使用非常简单, 对于Server端和Soap使用方法很像，而对于客户端，你可以像调用本地对象的函数一样，调用远程的函数，底层通讯可以
 
 ## RPC Server
 #### 安装环境 (客户端服务端都需要安装)
@@ -650,6 +650,8 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
 
 
 ## RPC Client
+yar 除了支持 http 之外，还支持tcp， unix domain socket传输协议，不过ycroute中只用了 http ，当然 http 也可以开启 keepalive 以获得更高的传输性能，只不过相比 socket， http 协议还是多了不少的协议头部的开销。
+
 #### 安装环境
 扩展： yar.so <br>
 扩展： msgpack.so 可选，一个高效的二进制打包协议，用于客户端和服务端之间包传输，还可以选php、json, 如果要使用Msgpack做为打包协议, 就需要安装这个扩展。
