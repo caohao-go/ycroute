@@ -132,7 +132,13 @@ class Loader
             unset(self::$redis[$redis_name]);
             $util_log = Logger::get_instance('loader_redis');
             
-            $redis_config = self::config("redis")[$redis_name];
+            if(USE_QCONF) {
+                $config_str = Qconf::getConf($redis_name);
+                $redis_config = json_decode($config_str, true);
+            } else {
+                $redis_config = self::config("redis")[$redis_name];
+            }
+            
             if(empty($redis_config)) {
                 $util_log->LogError("Loader::redis:  redis config not exist");
                 return;

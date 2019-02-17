@@ -19,5 +19,7 @@ define("APPPATH", realpath(dirname(__FILE__)));
 define("BASEPATH", APPPATH . '/system');
 define("APP_ROOT", APPPATH);
 
+define("USE_QCONF", false);
+
 $app = new Yaf_Application(APPPATH . "/conf/application.ini");
 $app->bootstrap()->run();
