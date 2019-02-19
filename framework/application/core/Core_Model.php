@@ -25,7 +25,13 @@ class Core_Model {
 
         $redis = Loader::redis($this->redis_conf_path);
         if (!empty($redis)) {
-            return $redis->get($redis_key);
+            $data = $redis->get($redis_key);
+            if (!empty($data)) {
+                if ($data == self::EMPTY_STRING) {
+                    return;
+                }
+                return unserialize($data);
+            }
         }
     }
 
@@ -164,11 +170,7 @@ class Core_Model {
     protected function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            if ($data == self::EMPTY_STRING) {
-                return;
-            } else {
-                return unserialize($data);
-            }
+            return $data;
         }
 
         $data = $this->db->get_one($table, [$key => $value]);
@@ -190,11 +192,7 @@ class Core_Model {
     protected function get_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            if ($data == self::EMPTY_STRING) {
-                return;
-            } else {
-                return unserialize($data);
-            }
+            return $data;
         }
 
         $data = $this->db->get($table, $where);
@@ -216,11 +214,7 @@ class Core_Model {
     protected function get_one_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            if ($data == self::EMPTY_STRING) {
-                return;
-            } else {
-                return unserialize($data);
-            }
+            return $data;
         }
 
         $data = $this->db->get_one($table, $where);
