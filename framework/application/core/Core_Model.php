@@ -25,13 +25,7 @@ class Core_Model {
 
         $redis = Loader::redis($this->redis_conf_path);
         if (!empty($redis)) {
-            $data = $redis->get($redis_key);
-            if (!empty($data)) {
-                if ($data == self::EMPTY_STRING) {
-                    return;
-                }
-                return unserialize($data);
-            }
+            return $redis->get($redis_key);
         }
     }
 
@@ -42,7 +36,7 @@ class Core_Model {
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否缓存空值，如果缓存空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    protected function set_redis($redis_key, $data, $redis_expire = 600, $set_empty_flag = true) {
+    protected function set_redis($redis_key, $data, $redis_expire, $set_empty_flag) {
         if (empty($redis_key)) return;
 
         $redis = Loader::redis($this->redis_conf_path);
@@ -170,7 +164,11 @@ class Core_Model {
     protected function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            return $data;
+            if ($data == self::EMPTY_STRING) {
+                return;
+            } else {
+                return unserialize($data);
+            }
         }
 
         $data = $this->db->get_one($table, [$key => $value]);
@@ -192,7 +190,11 @@ class Core_Model {
     protected function get_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            return $data;
+            if ($data == self::EMPTY_STRING) {
+                return;
+            } else {
+                return unserialize($data);
+            }
         }
 
         $data = $this->db->get($table, $where);
@@ -214,7 +216,11 @@ class Core_Model {
     protected function get_one_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            return $data;
+            if ($data == self::EMPTY_STRING) {
+                return;
+            } else {
+                return unserialize($data);
+            }
         }
 
         $data = $this->db->get_one($table, $where);
