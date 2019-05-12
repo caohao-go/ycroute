@@ -99,7 +99,8 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     var $params;
 
     //路由之前调用
-    public function routerStartUp ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response) {
+    public function routerStartUp ( Yaf_Request_Abstract $request , Yaf_Response_Abstract $response) 
+    {
         $this->params = & $request->getParams();
        
        	$this->_auth();
@@ -109,7 +110,7 @@ class FilterPlugin extends Yaf_Plugin_Abstract {
     //验签过程
     protected function _auth()
     {
-        //在这里写你的验签逻辑
+        //在这里写你的签名验证逻辑
     }
     ...
 }
