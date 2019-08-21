@@ -1,10 +1,9 @@
 <?php
 /**
- * Initialize the database
+ * Initialize the database https://github.com/caohao-php/ycroute
  * @category    DBLoader
  * @author      caohao
  * @param       string
- * @param       bool    Determines if use phalcon engine
  */
 function &DBLoader($params = '')
 {
