@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Core_Controller Class
+ * Core_Controller Class https://github.com/caohao-php/ycroute
  *
  * @package        YCRoute
  * @subpackage    Controller

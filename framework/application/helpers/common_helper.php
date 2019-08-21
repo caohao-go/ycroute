@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * @package        YCRoute
+ * @package        YCRoute https://github.com/caohao-php/ycroute
  * @subpackage    Function
  * @category      Common Function
  * @author        caohao
