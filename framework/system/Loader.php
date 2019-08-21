@@ -81,7 +81,7 @@ class Loader
         if(!Yaf_Registry::has($remote_key)) {
         	$model_config = self::config("rpc")[$model_name];
         	if(empty($model_config['url'])) {
-                $util_log->LogError("Loader::remote_model:  remote_model config not exist");
+                Logger::get_instance('remote_model')->LogError("Loader::remote_model:  remote_model config not exist");
                 return;
             }
             
