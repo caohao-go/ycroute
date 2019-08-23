@@ -14,6 +14,8 @@ header('Content-Type: text/html; charset=UTF-8');
 ini_set('display_errors', 'On');
 error_reporting(E_ERROR);
 
+define("SYSTEM_LOG", "/data/app/logs"); //日志目录
+
 define("APPPATH", realpath(dirname(__FILE__)));
 
 define("BASEPATH", APPPATH . '/system');

@@ -7,7 +7,7 @@
  * @category      Logger
  * @author        caohao
  */
-define('COMMON_LOG_PATH', '/data/app/logs/');
+define('COMMON_LOG_PATH', SYSTEM_LOG  . '/');
 
 if (isset($_SERVER['SERVER_NAME'])){
     define('DEFAULT_LOG_PATH', COMMON_LOG_PATH.$_SERVER['SERVER_NAME']);
