@@ -1,6 +1,6 @@
 <?php
 /**
- * Exceptions Class https://github.com/caohao-php/ycroute
+ * Exceptions Class  https://github.com/caohao-php/ycroute
  *
  * @package        YCRoute
  * @subpackage    Exceptions

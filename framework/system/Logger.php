@@ -1,19 +1,12 @@
 <?php
 /**
- * Logger Class https://github.com/caohao-php/ycroute
+ * Logger Class  https://github.com/caohao-php/ycroute
  *
  * @package       YCRoute
  * @subpackage    Libraries
  * @category      Logger
  * @author        caohao
  */
-define('COMMON_LOG_PATH', SYSTEM_LOG  . '/');
-
-if (isset($_SERVER['SERVER_NAME'])){
-    define('DEFAULT_LOG_PATH', COMMON_LOG_PATH.$_SERVER['SERVER_NAME']);
-}else{
-    define('DEFAULT_LOG_PATH', COMMON_LOG_PATH."default_site");
-}
 define('DEFAULT_LOG_FILE_NAME', 'default');
 
 define('DEBUG', 1);  /* 是否调试  0-不打印调试日志  1-打印调试日志 */
@@ -29,14 +22,14 @@ class Logger {
     /**
      * @__construct 初始化
      * @param $config 日志配置:
-        $config['log_path'];  -- 日志目录, 一般采用默认 DEFAULT_LOG_PATH
+        $config['log_path'];  -- 日志目录, 一般采用默认 APP_LOG_PATH
         $config['file_name']; -- 日志文件名, 不写默认为 DEFAULT_LOG_FILE_NAME
      * @param
      * @return
      */
     public function __construct($config = 0) {
-        /* 日志目录, 不写默认为 DEFAULT_LOG_PATH */
-        $this->LogPath = empty($config['log_path']) ? DEFAULT_LOG_PATH : $config['log_path'];
+        /* 日志目录, 不写默认为 APP_LOG_PATH */
+        $this->LogPath = empty($config['log_path']) ? APP_LOG_PATH : $config['log_path'];
 
         /* 删除目录最后一个'/' */
         if (substr($this->LogPath, -1) == '/') {

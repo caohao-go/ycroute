@@ -39,7 +39,7 @@ if ( ! function_exists('log_message'))
         }
         
         $message = $level.' '.(($level == 'INFO') ? ' -' : '-').' '.date('Y-m-d H:i:s').' --> ip: '.$_SERVER['REMOTE_ADDR'].' --> '.$msg." --> url: ".$_SERVER['QUERY_STRING'].(empty($_POST)? "" :( " --> post ".  http_build_query($_POST) ))."\n";
-        @file_put_contents(SYSTEM_LOG . "/YCRoute-" . date('Y-m-d') . ".log.wf", $message , FILE_APPEND);
+        @file_put_contents(APP_LOG_PATH . "/YCRoute-" . date('Y-m-d') . ".log.wf", $message , FILE_APPEND);
     }
 }
 
