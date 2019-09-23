@@ -302,8 +302,6 @@ class YCDB_Driver {
                 // Found it - use a relative path for safety
                 $message[] = 'Filename: '.str_replace(array(BASEPATH, APPPATH), '', $call['file']);
                 $message[] = 'Line Number: '.$call['line'];
-
-                break;
             }
         }
         
