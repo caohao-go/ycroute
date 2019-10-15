@@ -23,7 +23,7 @@ class Loader
         return self::$instance;
     }
     
-    public static function & config($conf_name) {
+    public static function & config($conf_name = 'config') {
         if(isset(self::$configs[$conf_name])) {
             return self::$configs[$conf_name];
         }
