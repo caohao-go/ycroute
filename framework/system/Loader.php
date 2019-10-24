@@ -176,7 +176,7 @@ class Loader
 		}
     }
 
-    //本地共享内存缓存 yac 
+    //本地共享内存缓存 yac
     public static function yac_get($key) {
         $key = md5($key);
         $yac = new Yac();
