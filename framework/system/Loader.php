@@ -175,4 +175,37 @@ class Loader
 			Yaf_Registry::set($key, 1);
 		}
     }
+
+    //本地共享内存缓存 yac 
+    public static function yac_get($key) {
+        $key = md5($key);
+        $yac = new Yac();
+        $cache = $yac->get($key);
+        if(!empty($cache)) {
+            $cache_arr = unserialize($cache);
+            if($cache_arr['expire'] == 0 || time() < $cache_arr['expire']) {
+                return $cache_arr['data'];
+            }
+        }
+    }
+
+    public static function yac_set($key, $data, $expire = 0) {
+        $key = md5($key);
+        $yac = new Yac();
+        $cache = array();
+        $cache['data'] = $data;
+        $cache['expire'] = 0;
+
+        if(!empty($expire)) {
+            $cache['expire'] = time() + $expire;
+        }
+
+        $yac->set($key, serialize($cache));
+    }
+
+    public static function yac_del($key) {
+        $key = md5($key);
+        $yac = new Yac();
+        $yac->delete($key);
+    }
 }
