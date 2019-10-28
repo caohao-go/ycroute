@@ -897,9 +897,10 @@ public function delete_table($table, $where, $redis_key = "");
  * @param array where 查询条件
  * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
  * @param int redis_expire redis 缓存到期时长(秒)
+ * @param string $column 数据库表字段，可空
  * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
  */
-public function get_table_data($table, $where = array(), $redis_key = "", $redis_expire = 600, $set_empty_flag = true);
+public function get_table_data($table, $where = array(), $redis_key = "", $redis_expire = 600, $column = "*", $set_empty_flag = true);
 
 /**
  * 获取一条表数据
@@ -907,7 +908,8 @@ public function get_table_data($table, $where = array(), $redis_key = "", $redis
  * @param array where 查询条件
  * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
  * @param int redis_expire redis 缓存到期时长(秒)
+ * @param string $column 数据库表字段，可空
  * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
  */
-public function get_one_table_data($table, $where, $redis_key = "", $redis_expire = 600, $set_empty_flag = true);
+public function get_one_table_data($table, $where, $redis_key = "", $redis_expire = 600, $column = "*", $set_empty_flag = true);
 ```
