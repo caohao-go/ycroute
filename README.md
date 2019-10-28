@@ -900,16 +900,6 @@ public function delete_table($table, $where, $redis_key = "");
  * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
  */
 public function get_table_data($table, $where = array(), $redis_key = "", $redis_expire = 600, $set_empty_flag = true);
-/**
- * 根据key获取表记录
- * @param string table 表名
- * @param string key 键名
- * @param string value 键值
- * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
- * @param int redis_expire redis 缓存到期时长(秒)
- * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
- */
-public function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true);
 
 /**
  * 获取一条表数据
