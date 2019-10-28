@@ -157,11 +157,12 @@ class Core_Model {
      * @param string table 表名
      * @param string key 键名
      * @param string value 键值
+     * @param string $column 数据库表字段，可空
      * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    protected function get_table_data_by_key($table, $key, $value, $redis_key = "", $redis_expire = 300, $set_empty_flag = true) {
+    protected function get_table_data_by_key($table, $key, $value, $column = "*", $redis_key = "", $redis_expire = 300, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
             if ($data == self::EMPTY_STRING) {
@@ -171,7 +172,7 @@ class Core_Model {
             }
         }
 
-        $data = $this->db->get_one($table, [$key => $value]);
+        $data = $this->db->get_one($table, [$key => $value], $column);
         if($data != -1) {
             $this->set_redis($redis_key, $data, $redis_expire, $set_empty_flag);
             return $data;
@@ -183,11 +184,12 @@ class Core_Model {
      * 获取表数据
      * @param string table 表名
      * @param array where 查询条件
+     * @param string $column 数据库表字段，可空
      * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    protected function get_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
+    protected function get_table_data($table, $where = null, $column = "*", $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
             if ($data == self::EMPTY_STRING) {
@@ -197,7 +199,7 @@ class Core_Model {
             }
         }
 
-        $data = $this->db->get($table, $where);
+        $data = $this->db->get($table, $where, $column);
         if($data != -1) {
             $this->set_redis($redis_key, $data, $redis_expire, $set_empty_flag);
             return $data;
@@ -209,11 +211,12 @@ class Core_Model {
      * 获取一条表数据
      * @param string table 表名
      * @param array where 查询条件
+     * @param string $column 数据库表字段，可空
      * @param string redis_key redis 缓存键值, 可空， 非空时清理键值缓存
      * @param int redis_expire redis 缓存到期时长(秒)
      * @param boolean set_empty_flag 是否标注空值，如果标注空值，在表记录更新之后，一定记得清理空值标记缓存
      */
-    protected function get_one_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
+    protected function get_one_table_data($table, $where = null, $column = "*", $redis_key = "", $redis_expire = 600, $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
             if ($data == self::EMPTY_STRING) {
@@ -223,7 +226,7 @@ class Core_Model {
             }
         }
 
-        $data = $this->db->get_one($table, $where);
+        $data = $this->db->get_one($table, $where, $column);
         if($data != -1) {
             $this->set_redis($redis_key, $data, $redis_expire, $set_empty_flag);
             return $data;
