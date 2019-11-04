@@ -180,7 +180,7 @@ class Core_Model {
     }
 
     /**
-     * 获取表数据
+     * 分页获取表数据
      * @param string table 表名
      * @param array where 查询条件
      * @param array page - 页数，从 1 开始
