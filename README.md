@@ -449,7 +449,6 @@ function update_user($userid, $update_data) {
 $ret = $this->db->delete("user_info", ["user_id" => 7339820]);
 ```
 
-
 #### 更多操作参考
 通过 $this->db->get_ycdb(); 可以获取ycdb句柄进行更多数据库操作， 更多 ycdb 的使用教程如下：
 英文： https://github.com/caohao-php/ycdatabase<br>
@@ -457,6 +456,33 @@ $ret = $this->db->delete("user_info", ["user_id" => 7339820]);
 
 #### where 语句大全
 ```php
+/************** the complete example **********************
+SELECT  * FROM table  
+WHERE `user`.`email` NOT IN ('foo@bar.com', 'cat@dog.com', 'admin@ycdb.in') AND 
+`user`.`uid` < 11111 AND `uid` >= 222 AND 
+`uid` IS NOT NULL AND 
+`count` NOT IN (36, 57, 89) AND 
+`id` != 1 AND `int_num` != 3 AND `double_num` != 3.76 AND 
+`AA` LIKE '%saa%' AND `BB` NOT LIKE '%sbb' AND 
+(`CC` LIKE '11%' OR `CC` LIKE '22_' OR `CC` LIKE '33%') AND 
+(`DD` NOT LIKE '%44%' OR `DD` NOT LIKE '55%' OR `DD` NOT LIKE '66%') AND 
+(`EE` LIKE '%E11' AND `EE` LIKE 'E22') AND 
+(`FF` LIKE '%F33' OR `FF` LIKE 'F44') AND 
+(`GG` NOT LIKE '%G55' AND `GG` NOT LIKE 'G66') AND 
+(`HH` NOT LIKE 'H77' OR `HH` NOT LIKE 'H88') AND 
+(`II` BETWEEN 1 AND 12) AND NOT 
+(`LL` BETWEEN 1 AND 12)  AND (
+  (`user_name` IS NULL OR `email` = 'foo@bar.com') AND 
+  (`user_name` = 'bar' OR `email` = 'bar@foo.com')
+) AND (`user_name` != 'foo' OR `promoted` != 1) 
+GROUP BY type,age,gender 
+HAVING `uid`.`num` > 111 AND `type` > 'smart' AND 
+	`id` != 0 AND `god3` != 9.86 AND `uid` IS NOT NULL 
+	AND `AA` LIKE 'SSA%' AND (`CC` LIKE '11%' OR `CC` LIKE '22%' OR `CC` LIKE '33%')
+ORDER BY  `user`.`score` , `user`.`uid` ASC, `time` DESC 
+LIMIT 33
+*/
+ 
 $where =  [
 	"user.email[!]" => ["foo@bar.com", "cat@dog.com", "admin@ycdb.in"],
 	"user.uid[<]" => 11111,
@@ -509,6 +535,7 @@ $where =  [
 	"LIMIT" => 33,
 ];
 ```
+
 ## 配置加载
 通过 Loader::config('xxxxx'); 加载 /application/config/xxxxx.php 的配置。例如：
 ```php
