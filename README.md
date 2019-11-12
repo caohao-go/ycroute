@@ -450,8 +450,8 @@ $ret = $this->db->delete("user_info", ["user_id" => 7339820]);
 ```
 
 
-#### 更多操作参考
-通过 $this->db->get_ycdb(); 可以获取ycdb句柄进行更多数据库操作， ycdb 的使用教程如下：
+#### 更多操作参考，如 where 条件
+通过 $this->db->get_ycdb(); 可以获取ycdb句柄进行更多数据库操作， 更多 ycdb 的使用教程如下：
 英文： https://github.com/caohao-php/ycdatabase<br>
 中文： https://blog.csdn.net/caohao0591/article/details/84390713
 
