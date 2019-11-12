@@ -450,11 +450,65 @@ $ret = $this->db->delete("user_info", ["user_id" => 7339820]);
 ```
 
 
-#### 更多操作参考，如 where 条件
+#### 更多操作参考
 通过 $this->db->get_ycdb(); 可以获取ycdb句柄进行更多数据库操作， 更多 ycdb 的使用教程如下：
 英文： https://github.com/caohao-php/ycdatabase<br>
 中文： https://blog.csdn.net/caohao0591/article/details/84390713
 
+#### where 语句大全
+```php
+$where =  [
+	"user.email[!]" => ["foo@bar.com", "cat@dog.com", "admin@ycdb.in"],
+	"user.uid[<]" => 11111,
+	"uid[>=]" => 222,
+	"uid[!]" => null,
+	"count[!]" => [36, 57, 89],
+	"id[!]" => true,
+	"int_num[!]" => 3,
+	"double_num[!]" => 3.76,
+	"AA[~]" => "%saa%",
+	"BB[!~]" => "%sbb",
+	"CC[~]" => ["11%", "22_", "33%"],
+	"DD[!~]" => ["%44%", "55%", "66%"],
+	"EE[~]" => ["AND" => ["%E11", "E22"]],
+	"FF[~]" => ["OR" => ["%F33", "F44"]],
+	"GG[!~]" => ["AND" => ["%G55", "G66"]],
+	"HH[!~]" => ["OR" => ["H77", "H88"]],
+	"II[<>]" => ["1", "12"],
+	"LL[><]" => ["1", "12"],
+	"AND #1" => [
+		"OR #1" => [
+			"user_name" => null,
+			"email" => "foo@bar.com",
+		],
+		"OR #2" => [
+			"user_name" => "bar",
+			"email" => "bar@foo.com"
+		]
+	],
+	"OR" => [
+		"user_name[!]" => "foo",
+		"promoted[!]" => true
+	],
+	'GROUP' => 'userid',
+	'GROUP' => ['type', 'age', 'gender'],
+	'HAVING' => [
+		"uid.num[>]" => 111,
+		"type[>]" => "smart",
+		"id[!]" => false,
+		"god3[!]" => 9.86,
+		"uid[!]" => null,
+		"AA[~]" => "SSA%",
+		"CC[~]" => ["11%", "22%", "%33"],
+	],
+	'ORDER' => [
+		"user.score",
+		"user.uid" => "ASC",
+		"time" => "DESC",
+	],
+	"LIMIT" => 33,
+];
+```
 ## 配置加载
 通过 Loader::config('xxxxx'); 加载 /application/config/xxxxx.php 的配置。例如：
 ```php
