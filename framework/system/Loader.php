@@ -127,9 +127,10 @@ class Loader
 
     }
     
-    public static function & redis($redis_name, $reconnect = false) {
-        if(empty(self::$redis[$redis_name]) || $reconnect) {
-            unset(self::$redis[$redis_name]);
+    public static function & redis($redis_name, $type = 'master', $reconnect = false) {
+    	$redis_key = $redis_name . "_" . $type;
+        if(empty(self::$redis[$redis_key]) || $reconnect) {
+            unset(self::$redis[$redis_key]);
             $util_log = Logger::get_instance('loader_redis');
             
             if(USE_QCONF) {
@@ -139,17 +140,37 @@ class Loader
                 $redis_config = self::config("redis")[$redis_name];
             }
             
-            if(empty($redis_config)) {
-                $util_log->LogError("Loader::redis:  redis config not exist");
+            if(empty($redis_config['master'])) {
+                $util_log->LogError("Loader::redis:  redis master config not exist");
                 return;
             }
             
-            self::$redis[$redis_name] = new Redis();
+            if($type != 'master' && $type != 'slave') {
+                $util_log->LogError("Loader::redis:  redis type error");
+                return;
+            }
+            
+            if($type == 'slave' && empty($redis_config['slave'])) {
+            	if(!empty(self::$redis[$redis_name . "_master"]) && !$reconnect) {
+            		return self::$redis[$redis_name . "_master"];
+            	}
+            	
+            	$type = 'master';
+            }
+            
+            if($type == 'master') {
+            	$redis_config = $redis_config['master'];
+            } else {
+            	$rand_key = array_rand($redis_config['slave']);
+            	$redis_config = $redis_config['slave'][$rand_key];
+            }
+            
+            self::$redis[$redis_key] = new Redis();
             
             if(substr($redis_config['host'], 0, 1) == '/') {
-                $flag = self::$redis[$redis_name]->connect($redis_config['host']);
+                $flag = self::$redis[$redis_key]->connect($redis_config['host']);
             } else {
-                $flag = self::$redis[$redis_name]->pconnect($redis_config['host'], $redis_config['port']);
+                $flag = self::$redis[$redis_key]->pconnect($redis_config['host'], $redis_config['port']);
             }
             
             if(!$flag) {
@@ -157,15 +178,16 @@ class Loader
                 return;
             }
             
-			if(!empty($redis_config['auth'])){
-                $suc = self::$redis[$redis_name]->auth($redis_config['auth']);
+            if(!empty($redis_config['auth'])){
+                $suc = self::$redis[$redis_key]->auth($redis_config['auth']);
                 if(!$suc) {
                     $util_log->LogError("Loader::redis:  redis auth error");
                     return;
                 }
             }
         }
-        return self::$redis[$redis_name];
+        
+        return self::$redis[$redis_key];
     }
     
     public static function my_include_once($path) {
