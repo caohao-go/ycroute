@@ -238,23 +238,24 @@ framework/application/daos/UserinfoDao.php ，数据库交互层，你可以继�
 ## redis 缓存操作
 加载 redis 缓存： Loader::redis('default_master');  参数为framework/application/config/redis.php 配置键值，如下：
 ```php
-$redis_conf['default_master']['host'] = '127.0.0.1';
-$redis_conf['default_master']['port'] = 6379;
-$redis_conf['default_slave']['host'] = '/tmp/redis_pool.sock';  //unix socket redis连接池，需要配置 openresty-pool/conf/nginx.conf，并开启代理，具体参考 https://blog.csdn.net/caohao0591/article/details/85679702
+$redis_conf['default']['master']['host'] = '127.0.0.1';
+$redis_conf['default']['master']['port'] = 6379;
+$redis_conf['default']['slave'][0]['host'] = '/tmp/redis_pool.sock';  //unix socket redis连接池，需要配置 openresty-pool/conf/nginx.conf，并开启代理，具体参考 https://blog.csdn.net/caohao0591/article/details/85679702
 
-$redis_conf['userinfo']['host'] = '127.0.0.1';
-$redis_conf['userinfo']['port'] = 6379;
+$redis_conf['userinfo']['master']['host'] = '127.0.0.1';
+$redis_conf['userinfo']['master']['port'] = 6379;
+$redis_conf['userinfo']['master']['auth'] = 'password';
 
 return $redis_conf;
 ```
 
 使用例子：
 ```php
-$redis = Loader::redis("default_master"); //主写
+$redis = Loader::redis("default"); //主写
 $redis->set("pre_redis_user_${userid}", serialize($result));
 $redis->expire("pre_redis_user_${userid}", 3600);
 
-$redis = Loader::redis("default_slave"); //从读
+$redis = Loader::redis("default", "slave"); //从读
 $data = $redis->get("pre_redis_user_${userid}");
 ```
 
