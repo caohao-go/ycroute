@@ -232,6 +232,18 @@ class YCDB_Driver {
         
         return $ret[0];
     }
+    
+    public function begin() {
+        $this->ycdb->begin();
+    }
+
+    public function commit() {
+        $this->ycdb->commit();
+    }
+
+    public function rollback() {
+        $this->ycdb->rollback();
+    }
      
     function handle_error($input_error = null) {
     	if(empty($input_error)) {

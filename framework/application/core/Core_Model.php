@@ -246,4 +246,16 @@ class Core_Model {
         }
         return array();
     }
+
+    public function begin() {
+        $this->db->begin();
+    }
+
+    public function commit() {
+        $this->db->commit();
+    }
+
+    public function rollback() {
+        $this->db->rollback();
+    }
 }
