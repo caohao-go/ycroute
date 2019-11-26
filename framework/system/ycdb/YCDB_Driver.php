@@ -1,6 +1,6 @@
 <?php
 /**
- * YCDB_Driver class https://github.com/caohao-php/ycroute
+ * YCDB_Driver class https://github.com/caohao-php/ycroute 
  *
  * @package       YCRoute
  * @subpackage    database
@@ -232,7 +232,7 @@ class YCDB_Driver {
         
         return $ret[0];
     }
-    
+
     public function begin() {
         $this->ycdb->begin();
     }
