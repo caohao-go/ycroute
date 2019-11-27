@@ -164,11 +164,7 @@ class Core_Model {
     protected function get_table_data($table, $where = null,  $redis_key = "", $redis_expire = 600, $column = "*", $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            if ($data == self::EMPTY_STRING) {
-                return;
-            } else {
-                return unserialize($data);
-            }
+        	return $data == self::EMPTY_STRING ? array() : unserialize($data);
         }
 
         $data = $this->db->get($table, $where, $column);
@@ -198,16 +194,12 @@ class Core_Model {
         if(!empty($redis_key)) {
             $redis_key = $redis_key . "_{$page_size}_{$page}";
         }
-
+        
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            if ($data == self::EMPTY_STRING) {
-                return;
-            } else {
-                return unserialize($data);
-            }
+        	return $data == self::EMPTY_STRING ? array() : unserialize($data);
         }
-
+		
         $where = empty($where) ? array() : $where;
         $start = ($page - 1) * $page_size;
         $where['LIMIT'] = [$start, $page_size];
@@ -232,11 +224,7 @@ class Core_Model {
     protected function get_one_table_data($table, $where = null, $redis_key = "", $redis_expire = 600, $column = "*", $set_empty_flag = true) {
         $data = $this->get_redis($redis_key);
         if (!empty($data)) {
-            if ($data == self::EMPTY_STRING) {
-                return;
-            } else {
-                return unserialize($data);
-            }
+        	return $data == self::EMPTY_STRING ? array() : unserialize($data);
         }
 
         $data = $this->db->get_one($table, $where, $column);
@@ -257,5 +245,16 @@ class Core_Model {
 
     public function rollback() {
         $this->db->rollback();
+    }
+    
+    //计算记录总页数
+    public static function page_count($count, $page_size) {
+    	return $count % $page_size == 0 ? $count / $page_size : intval($count / $page_size) + 1;
+    }
+    
+    //计算是否最后一页
+    public static function is_last_page($count, $page, $page_size) {
+    	$page_cnt = self::page_count($count, $page_size);
+    	return $page < $page_cnt ? false : true;
     }
 }
