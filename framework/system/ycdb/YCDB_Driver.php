@@ -234,14 +234,17 @@ class YCDB_Driver {
     }
 
     public function begin() {
+    	$this->initialize();
         $this->ycdb->begin();
     }
 
     public function commit() {
+    	$this->initialize();
         $this->ycdb->commit();
     }
 
     public function rollback() {
+    	$this->initialize();
         $this->ycdb->rollback();
     }
      
