@@ -126,8 +126,6 @@ class UserController extends Core_Controller {
         $this->user_model = Loader::model('UserinfoModel'); //模型层
 
         $this->util_log = Logger::get_instance('user_log'); //日志
-
-        $this->sample = Loader::library('Sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }
 
     //获取用户信息接口
@@ -543,14 +541,14 @@ var_dump($config);
 ```
 
 ## 公共类加载
-所有的公共类库位于superci/application/library目录，但是注意的是， 如果你的类位于library子目录下面，你的类必须用下划线"_"分隔；
+所有的公共类库位于superci/application/library目录，不需要include，自动加载，但是注意的是， 如果你的类位于library子目录下面，你的类必须用下划线"_"分隔；规则和Yaf的类自动加载一致
 ```php
-$this->sample = Loader::library('Sample');
+$this->sample = new Sample();
 ```
 加载的就是 framework/application/library/Sample.php 中的 Sample类。
 
 ```php
-$this->ip_location = Loader::library('Ip_Location');
+$this->ip_location = Ip_Location
 ```
 加载的是 framework/application/library/Ip/Location.php 中的Ip_Location类
 

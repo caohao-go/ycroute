@@ -32,20 +32,6 @@ class Loader
         return self::$configs[$conf_name];
     }
     
-    public static function library($library_name, $params = null) {
-        if(!Yaf_Registry::has($library_name)) {
-            $file_name = APPPATH . "/application/library/" . implode('/', explode('_', $library_name)) . ".php";
-            include($file_name);
-            if(empty($params)) {
-                Yaf_Registry::set($library_name, new $library_name());
-            } else {
-                Yaf_Registry::set($library_name, new $library_name($params));
-            }
-        }
-        
-        return Yaf_Registry::get($library_name);
-    }
-    
     public static function model($model_name, $params = null) {
         if(!Yaf_Registry::has($model_name)) {
             if(empty($params)) {

@@ -15,7 +15,7 @@ class UserController extends Core_Controller {
 
         $this->util_log = Logger::get_instance('user_log'); //日志
 
-        $this->sample = Loader::library('Sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
+        $this->sample = new Sample(); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }
 
     //获取用户信息接口
