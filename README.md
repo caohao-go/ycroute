@@ -63,7 +63,6 @@ ycdatabase 介绍以及安装： https://github.com/caohao-php/ycdatabase
          |----- core          //框架基类目录
 	 |----- daos          //DAO层目录(可选)
          |----- errors        //错误页目录
-         |----- helpers       //公共函数目录
          |----- library       //公共类库目录
          |----- models        //模型层目录
          |----- plugins       //yaf路由插件目录，路由前后钩子，(接口验签在这里)
@@ -127,7 +126,6 @@ class UserController extends Core_Controller {
         $this->user_model = Loader::model('UserinfoModel'); //模型层
 
         $this->util_log = Logger::get_instance('user_log'); //日志
-        Loader::helper('common_helper'); //公共函数
 
         $this->sample = Loader::library('Sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }
@@ -555,9 +553,6 @@ $this->sample = Loader::library('Sample');
 $this->ip_location = Loader::library('Ip_Location');
 ```
 加载的是 framework/application/library/Ip/Location.php 中的Ip_Location类
-
-## 公共函数
-所有的公共类库位于superci/application/helpers目录，通过 Loader::helper('common_helper'); 方法包含进来。
 
 ## 日志
 日志使用方法如下：

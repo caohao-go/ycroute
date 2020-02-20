@@ -14,7 +14,6 @@ class UserController extends Core_Controller {
         $this->user_model = Loader::model('UserinfoModel'); //模型层
 
         $this->util_log = Logger::get_instance('user_log'); //日志
-        Loader::helper('common_helper'); //公共函数
 
         $this->sample = Loader::library('Sample'); //加载类库，加载的就是 framework/library/Sample.php 里的Sample类
     }

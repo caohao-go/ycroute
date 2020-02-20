@@ -10,7 +10,6 @@
 class Loader
 {
     private static $configs = array();
-    private static $has_helpers = array();
     private static $redis = array();
     
     private static $instance;
@@ -31,22 +30,6 @@ class Loader
         $path = Yaf_Registry::get("config")->application->appconf->directory;
         self::$configs[$conf_name] = include("$path/".$conf_name.".php");
         return self::$configs[$conf_name];
-    }
-    
-    public static function helper($helper_name) {
-        if (isset(self::$has_helpers[$helper_name])){
-            return true;
-        }
-        
-        $path = Yaf_Registry::get("config")->application->helper->directory;
-        if (file_exists($path . "/" . $helper_name . ".php")){
-           	self::my_include_once($path . "/" . $helper_name . ".php");
-            self::$has_helpers[$helper_name] = true;
-        } else {
-            self::$has_helpers[$helper_name] = false;
-        }
-        
-        return true;
     }
     
     public static function library($library_name, $params = null) {
